@@ -1,1 +1,12 @@
-<p>charts works!</p>
+<section class="chart-section">
+    <h3>Dépenses par catégorie</h3>
+  
+    <apx-chart
+      *ngIf="chartOptions.series.length"
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [labels]="chartOptions.labels"
+      [responsive]="chartOptions.responsive"
+      [legend]="chartOptions.legend">
+    </apx-chart>
+  </section>

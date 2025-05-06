@@ -1,1 +1,15 @@
-<p>dashboard works!</p>
+<section class="dashboard">
+    <h2>Tableau de bord</h2>
+    <div class="summary">
+      <div class="card total">
+        <h3>Dépenses mensuelles</h3>
+        <p>{{ totalSpent }}</p>
+      </div>
+      <div class="card count">
+        <h3>Abonnements actifs</h3>
+        <p>{{ totalSubscriptions }}</p>
+      </div>
+    </div>
+
+    <app-charts></app-charts>
+  </section>

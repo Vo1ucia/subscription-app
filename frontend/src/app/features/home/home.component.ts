@@ -5,9 +5,9 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { SubscriptionListComponent } from './subscription-list/subscription-list.component';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-root',
+  standalone: true,
   imports: [
-    ChartsComponent,
     DashboardComponent,
     SidebarComponent,
     SubscriptionListComponent

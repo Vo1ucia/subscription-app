@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from '../models/subscription';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -23,5 +24,12 @@ export class SubscriptionService {
       category: 'Musique'
     }
   ];
-  constructor() { }
+  private subscriptionsSubject = new BehaviorSubject<Subscription[]>(this.subscriptions);
+
+  constructor() {}
+
+  // 🔹 Méthode à utiliser dans le component
+  getSubscriptions(): Observable<Subscription[]> {
+    return this.subscriptionsSubject.asObservable();
+  }
 }

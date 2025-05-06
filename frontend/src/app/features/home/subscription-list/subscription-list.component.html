@@ -1,1 +1,7 @@
-<p>subscription-list works!</p>
+
+<div class="subscription-list">
+    <app-subscription-card
+      *ngFor="let sub of subscriptions"
+      [subscription]="sub">
+    </app-subscription-card>
+  </div>
