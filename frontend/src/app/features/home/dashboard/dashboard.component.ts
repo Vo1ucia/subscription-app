@@ -1,14 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { SubscriptionService } from '../../../core/services/subscription.service';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { ChartComponent } from 'ng-apexcharts';
 import { ChartsComponent } from "../charts/charts.component";
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, ChartComponent, ChartsComponent],
+  imports: [CommonModule, ChartsComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
