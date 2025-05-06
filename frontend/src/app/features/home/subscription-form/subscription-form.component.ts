@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { 
   FormBuilder, 
@@ -18,19 +18,17 @@ import { SubscriptionService } from '../../../core/services/subscription.service
   styleUrl: './subscription-form.component.scss'
 })
 export class SubscriptionFormComponent {
-  private formBuilder = inject(FormBuilder);
-  private subscriptionService = inject(SubscriptionService);
-  
-  subscriptionForm!: FormGroup;
+  subscriptionForm: FormGroup;
   submitted = false;
-  formSubmitted = false;
-
-  ngOnInit(): void {
-    this.initForm();
-  }
-
-  initForm(): void {
-    this.subscriptionForm = this.formBuilder.group({
+  
+  @Output() cancel = new EventEmitter<void>();
+  @Output() subscriptionAdded = new EventEmitter<void>();
+  
+  constructor(
+    private fb: FormBuilder,
+    private subscriptionService: SubscriptionService
+  ) {
+    this.subscriptionForm = this.fb.group({
       name: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(0.01)]],
       frequency: ['monthly', Validators.required],
@@ -39,19 +37,17 @@ export class SubscriptionFormComponent {
       description: ['']
     });
   }
-
+  
   onSubmit(): void {
     this.submitted = true;
-
-    // Arrêter si le formulaire est invalide
+    
     if (this.subscriptionForm.invalid) {
       return;
     }
-
-    // Créer un nouvel objet Subscription
+    
     const formValues = this.subscriptionForm.getRawValue();
     const newSubscription: Subscription = {
-      id: Math.floor(Math.random() * 10000).toString(), // ID temporaire
+      id: Math.floor(Math.random() * 10000).toString(),
       name: formValues.name,
       price: parseFloat(formValues.price),
       frequency: formValues.frequency,
@@ -59,26 +55,12 @@ export class SubscriptionFormComponent {
       startDate: new Date(formValues.startDate),
       description: formValues.description
     };
-
-    // Ajouter l'abonnement via le service
+    
     this.subscriptionService.addSubscription(newSubscription);
-    
-    // Afficher le message de succès
-    this.formSubmitted = true;
-    
-    // Réinitialiser le formulaire après un certain délai
-    setTimeout(() => {
-      this.resetForm();
-      this.formSubmitted = false;
-    }, 3000);
+    this.subscriptionAdded.emit();
   }
-
-  resetForm(): void {
-    this.submitted = false;
-    this.subscriptionForm.reset({
-      frequency: 'monthly',
-      category: 'streaming',
-      startDate: new Date().toISOString().split('T')[0]
-    });
+  
+  onCancel(): void {
+    this.cancel.emit();
   }
 }

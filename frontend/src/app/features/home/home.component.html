@@ -13,11 +13,6 @@
     <app-subscription-list></app-subscription-list>
   </div>
   
-  <!-- Formulaire d'ajout (visible uniquement si showForm est true) -->
-  <div *ngIf="showForm()" class="mb-6">
-    <app-subscription-form (subscriptionAdded)="onSubscriptionAdded()"></app-subscription-form>
-  </div>
-  
   <!-- Pied de page -->
   <footer class="mt-12 pt-6 border-t border-gray-200 text-center">
     <div class="flex justify-center space-x-6 mb-3">

@@ -13,26 +13,11 @@ import { ChartsComponent } from "./charts/charts.component";
   imports: [
     CommonModule,
     DashboardComponent,
-    ChartComponent,
     SubscriptionListComponent,
-    SubscriptionFormComponent,
     NavbarComponent,
-    ChartsComponent
 ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-  showForm = signal(false);
-  totalMonthly = 50; // À connecter à votre service
-  subscriptionCount = 4; // À connecter à votre service
-  
-  toggleForm(): void {
-    this.showForm.update(value => !value);
-  }
-  
-  onSubscriptionAdded(): void {
-    // Fermer le formulaire après l'ajout
-    this.showForm.set(false);
-  }
 }

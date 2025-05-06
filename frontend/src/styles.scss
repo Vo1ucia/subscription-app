@@ -16,3 +16,15 @@
   h1, h2, h3, h4, h5, h6, p, button, input, select, textarea {
     font-family: 'Roboto', sans-serif;
   }
+
+  .bg-black.bg-opacity-30 {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .bg-black.bg-opacity-50 {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+  }
+  
+  .bg-black.bg-opacity-20 {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+  }
