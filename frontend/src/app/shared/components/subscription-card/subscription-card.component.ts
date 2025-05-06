@@ -31,11 +31,11 @@ export class SubscriptionCardComponent {
   formatCategory(category: string): string {
     const categories: { [key: string]: string } = {
       'streaming': 'Streaming',
-      'music': 'Music',
-      'cloud': 'Cloud Storage',
-      'software': 'Software',
+      'music': 'Musique',
+      'cloud': 'Cloud',
+      'software': 'Logiciel',
       'gaming': 'Gaming',
-      'other': 'Other'
+      'other': 'Autres'
     };
     
     return categories[category] || category;
@@ -43,17 +43,17 @@ export class SubscriptionCardComponent {
   
   formatFrequency(frequency: string): string {
     const frequencies: { [key: string]: string } = {
-      'monthly': 'Monthly',
-      'yearly': 'Yearly',
-      'quarterly': 'Quarterly',
-      'weekly': 'Weekly'
+      'monthly': 'Mensuel',
+      'yearly': 'Annuel',
+      'quarterly': 'Semestriel',
+      'weekly': 'Hebdomadaire'
     };
     
     return frequencies[frequency] || frequency;
   }
   
   formatDate(date: Date): string {
-    return new Date(date).toLocaleDateString('en-US', { 
+    return new Date(date).toLocaleDateString('fr-FR', { 
       year: 'numeric', 
       month: 'short', 
       day: 'numeric' 
