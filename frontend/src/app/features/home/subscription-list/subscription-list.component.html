@@ -1,7 +1,37 @@
-
-<div class="subscription-list">
-    <app-subscription-card
-      *ngFor="let sub of subscriptions"
-      [subscription]="sub">
-    </app-subscription-card>
+<div class="bg-white rounded-lg shadow-sm overflow-hidden">
+    <!-- En-tête avec titre et bouton d'ajout -->
+    <div class="flex justify-between items-center p-5 border-b border-gray-200">
+      <h2 class="text-lg font-bold text-gray-800">Active Subscriptions</h2>
+      <div>
+        <button (click)="onAddButtonClick()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+          Add New Subscription
+        </button>
+      </div>
+    </div>
+    
+    <!-- Liste des abonnements -->
+    <div>
+      <div *ngFor="let subscription of subscriptions" 
+           class="flex justify-between items-center p-4 border-b border-gray-200 hover:bg-gray-50">
+        <div>
+          <h3 class="font-semibold text-gray-800">{{ subscription.name }}</h3>
+          <div class="text-sm text-gray-500">
+            Monthly: ${{ subscription.price.toFixed(2) }}
+          </div>
+        </div>
+        <div class="flex space-x-2">
+          <button (click)="onEdit(subscription)" class="bg-gray-800 hover:bg-gray-900 text-white px-3 py-1 rounded text-xs font-medium">
+            Edit
+          </button>
+          <button (click)="onDelete(subscription.id)" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-medium">
+            Delete
+          </button>
+        </div>
+      </div>
+      
+      <div *ngIf="subscriptions.length === 0" class="p-6 text-center text-gray-500">
+        <p>No active subscriptions found.</p>
+      </div>
+    </div>
+    
   </div>

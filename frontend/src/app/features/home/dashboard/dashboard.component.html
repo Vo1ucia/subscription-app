@@ -1,15 +1,27 @@
-<section class="dashboard">
-    <h2>Tableau de bord</h2>
-    <div class="summary">
-      <div class="card total">
-        <h3>Dépenses mensuelles</h3>
-        <p>{{ totalSpent }}</p>
+<div>
+    <!-- Titre du dashboard -->
+    <h2 class="text-lg font-bold text-gray-800 mb-4">Dashboard</h2>
+    
+    <!-- Grille des statistiques et graphique -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Statistiques côté gauche -->
+      <div class="md:col-span-1 space-y-4">
+        <!-- Carte dépense mensuelle -->
+        <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Total dépense</h3>
+          <p class="text-2xl font-bold text-gray-900">{{ totalMonthly.toFixed(2) }}€</p>
+        </div>
+        
+        <!-- Carte nombre d'abonnements -->
+        <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Total abonnement</h3>
+          <p class="text-2xl font-bold text-gray-900">{{ subscriptionCount }}</p>
+        </div>
       </div>
-      <div class="card count">
-        <h3>Abonnements actifs</h3>
-        <p>{{ totalSubscriptions }}</p>
+      
+      <!-- Graphique en camembert côté droit -->
+      <div class="md:col-span-2 bg-white border border-gray-200 rounded-lg p-4 shadow-sm flex items-center justify-center">
+        <app-charts></app-charts>
       </div>
     </div>
-
-    <app-charts></app-charts>
-  </section>
+  </div>

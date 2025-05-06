@@ -1,12 +1,17 @@
-<section class="chart-section">
-    <h3>Dépenses par catégorie</h3>
-  
-    <apx-chart
-      *ngIf="chartOptions.series.length"
-      [series]="chartOptions.series"
-      [chart]="chartOptions.chart"
-      [labels]="chartOptions.labels"
-      [responsive]="chartOptions.responsive"
-      [legend]="chartOptions.legend">
-    </apx-chart>
-  </section>
+<div class="chart-container">
+    <div *ngIf="!hasData" class="no-data-message">
+      Pas encore de données à afficher
+    </div>
+    
+    <div *ngIf="hasData" class="chart-wrapper">
+      <apx-chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [labels]="chartOptions.labels"
+        [colors]="chartOptions.colors"
+        [responsive]="chartOptions.responsive"
+        type="donut"
+        width="100%"
+      ></apx-chart>
+    </div>
+  </div>
