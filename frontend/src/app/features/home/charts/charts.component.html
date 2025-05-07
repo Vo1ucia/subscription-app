@@ -1,0 +1,17 @@
+<div class="chart-container">
+    <div *ngIf="!hasData" class="no-data-message">
+      Pas encore de données à afficher
+    </div>
+    
+    <div *ngIf="hasData" class="chart-wrapper">
+      <apx-chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [labels]="chartOptions.labels"
+        [colors]="chartOptions.colors"
+        [responsive]="chartOptions.responsive"
+        type="donut"
+        width="100%"
+      ></apx-chart>
+    </div>
+  </div>

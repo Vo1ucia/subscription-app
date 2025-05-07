@@ -1,0 +1,32 @@
+<div class="p-5">
+    <!-- En-tête avec titre et bouton d'ajout côte à côte -->
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold">Abonnement Actif</h2>
+      <button (click)="showForm = true" 
+              class="px-4 py-2 text-sm font-medium text-white bg-gray-800 hover:bg-black rounded-md shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700 flex items-center">
+        Ajouter un abonnement
+      </button>
+    </div>
+    
+    <!-- Liste des abonnements utilisant le composant card -->
+    <div class="flex flex-wrap gap-6">
+      <app-subscription-card 
+        *ngFor="let subscription of subscriptions" 
+        [subscription]="subscription"
+        (delete)="onDelete($event)"
+        (edit)="onEdit($event)">
+      </app-subscription-card>
+    </div>
+    
+    <div *ngIf="subscriptions.length === 0" class="p-6 text-center text-gray-500">
+      <p>Aucun abonnement trouvé</p>
+    </div>
+  </div>
+  
+  <!-- Formulaire en superposition -->
+  <app-subscription-form *ngIf="showForm" 
+      [subscription]="currentSubscription"
+      (cancel)="hideForm()" 
+      (subscriptionAdded)="onSubscriptionAdded()"
+      (subscriptionUpdated)="onSubscriptionUpdated()">
+  </app-subscription-form>
