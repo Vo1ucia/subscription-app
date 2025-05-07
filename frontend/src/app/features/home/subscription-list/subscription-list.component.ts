@@ -18,6 +18,7 @@ export class SubscriptionListComponent {
   private subscriptionService = inject(SubscriptionService);
   subscriptions: Subscription[] = [];
   showForm = false;
+  currentSubscription: Subscription | null = null;
   
   ngOnInit(): void {
     this.subscriptionService.subscriptions$.subscribe(subs => {
@@ -25,20 +26,31 @@ export class SubscriptionListComponent {
     });
   }
   
-  onEdit(id: string): void {
-    console.log("edit", id);
+  showAddForm(): void {
+    this.currentSubscription = null; // Mode ajout
+    this.showForm = true;
+  }
+  
+  onEdit(subscription: Subscription): void {
+    this.currentSubscription = subscription; // Mode édition
+    this.showForm = true;
+  }
+  
+  hideForm(): void {
+    this.showForm = false;
+    this.currentSubscription = null;
   }
   
   onDelete(id: string): void {
     this.subscriptionService.deleteSubscription(id);
   }
-
-  onDetail(id: string): void {
-    console.log("detail", id);
-  }
-
+  
   onSubscriptionAdded(): void {
-    this.showForm = false;
+    this.hideForm();
+  }
+  
+  onSubscriptionUpdated(): void {
+    this.hideForm();
   }
 
 }

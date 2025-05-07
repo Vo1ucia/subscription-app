@@ -7,7 +7,10 @@
     
     <!-- Prix mensuel -->
     <div class="text-sm text-gray-600 mb-4">
-      Mensuel: {{ subscription.price.toFixed(2) }}€
+      Mensuel: {{ getMonthlyPrice().toFixed(2) }}€
+      <span *ngIf="subscription.frequency !== 'monthly'" class="text-xs text-gray-400">
+        ({{ formatOriginalPrice() }})
+      </span>
     </div>
 
     <!-- Section détails (normalement cachée) -->

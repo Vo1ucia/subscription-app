@@ -25,6 +25,8 @@
   
   <!-- Formulaire en superposition -->
   <app-subscription-form *ngIf="showForm" 
-                       (cancel)="showForm = false" 
-                       (subscriptionAdded)="onSubscriptionAdded()">
+      [subscription]="currentSubscription"
+      (cancel)="hideForm()" 
+      (subscriptionAdded)="onSubscriptionAdded()"
+      (subscriptionUpdated)="onSubscriptionUpdated()">
   </app-subscription-form>
