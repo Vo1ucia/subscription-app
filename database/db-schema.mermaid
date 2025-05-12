@@ -1,0 +1,43 @@
+erDiagram
+    USERS {
+        int id PK
+        varchar username
+        varchar email
+        varchar password_hash
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    CATEGORIES {
+        int id PK
+        varchar name
+        text description
+        timestamp created_at
+    }
+    
+    PAYMENT_FREQUENCIES {
+        int id PK
+        varchar name
+        int months_interval
+        text description
+    }
+    
+    SUBSCRIPTIONS {
+        int id PK
+        int user_id FK
+        varchar name
+        text description
+        decimal price
+        int category_id FK
+        int payment_frequency_id FK
+        date start_date
+        date next_payment_date
+        boolean auto_renew
+        boolean active
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    USERS ||--o{ SUBSCRIPTIONS : "possède"
+    CATEGORIES ||--o{ SUBSCRIPTIONS : "catégorise"
+    PAYMENT_FREQUENCIES ||--o{ SUBSCRIPTIONS : "définit fréquence"
