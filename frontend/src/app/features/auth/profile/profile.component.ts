@@ -15,24 +15,29 @@ import { AuthService } from '../../../core/auth/services/auth.service';
 export class ProfileComponent implements OnInit {
   private fb = inject(FormBuilder);
   public authService = inject(AuthService);
-  
+ 
   profileForm = this.fb.group({
     username: [{ value: '', disabled: true }],
     email: ['', [Validators.required, Validators.email]],
     firstName: [''],
-    lastName: [''],
-    currentPassword: [''],
-    newPassword: ['', [Validators.minLength(6)]],
-    confirmPassword: ['']
+    lastName: ['']
+  });
+
+  passwordForm = this.fb.group({
+    oldPassword: ['', [Validators.required]],
+    newPassword: ['', [Validators.required, Validators.minLength(6)]],
+    confirmPassword: ['', [Validators.required]]
   }, {
     validators: this.passwordMatchValidator
   });
-  
+ 
   submitted = false;
   updateSuccess = false;
   updateError: string | null = null;
+  passwordUpdateSuccess = false;
+  passwordUpdateError: string | null = null;
   isChangingPassword = false;
-  
+ 
   ngOnInit(): void {
     // Charger les données de l'utilisateur
     const user = this.authService.user();
@@ -44,81 +49,98 @@ export class ProfileComponent implements OnInit {
         lastName: user.lastName || ''
       });
     }
-    
+   
     // Rafraîchir les données du profil depuis le serveur
-    this.authService.refreshUserProfile().subscribe();
+    this.authService.refreshUserProfile().subscribe({
+      next: (user) => {
+        this.profileForm.patchValue({
+          username: user.username,
+          email: user.email,
+          firstName: user.firstName || '',
+          lastName: user.lastName || ''
+        });
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement du profil', error);
+      }
+    });
   }
-  
+ 
   passwordMatchValidator(formGroup: any): { passwordMismatch: boolean } | null {
-    if (!formGroup.get('newPassword').value) {
-      return null;
-    }
-    
     const newPassword = formGroup.get('newPassword').value;
     const confirmPassword = formGroup.get('confirmPassword').value;
-    
+   
     if (newPassword !== confirmPassword) {
       return { passwordMismatch: true };
     }
-    
+   
     return null;
   }
-  
+ 
   togglePasswordChange(): void {
     this.isChangingPassword = !this.isChangingPassword;
-    
+   
     if (!this.isChangingPassword) {
-      this.profileForm.patchValue({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: ''
-      });
+      this.passwordForm.reset();
+      this.passwordUpdateSuccess = false;
+      this.passwordUpdateError = null;
     }
   }
-  
-  onSubmit(): void {
+ 
+  // Méthode pour mettre à jour uniquement le profil
+  onSubmitProfile(): void {
     this.submitted = true;
     this.updateSuccess = false;
     this.updateError = null;
-    
+   
     if (this.profileForm.invalid) {
       return;
     }
-    
+   
     const formValues = this.profileForm.value;
-    
+   
     // Préparer les données à envoyer
     const userData: any = {
       email: formValues.email,
       firstName: formValues.firstName,
       lastName: formValues.lastName
     };
-    
-    // Ajouter les champs de mot de passe si nécessaire
-    if (this.isChangingPassword && formValues.currentPassword && formValues.newPassword) {
-      userData.currentPassword = formValues.currentPassword;
-      userData.newPassword = formValues.newPassword;
-    }
-    
+   
     this.authService.updateProfile(userData).subscribe({
       next: () => {
         this.updateSuccess = true;
-        
-        // Réinitialiser les champs de mot de passe
-        if (this.isChangingPassword) {
-          this.profileForm.patchValue({
-            currentPassword: '',
-            newPassword: '',
-            confirmPassword: ''
-          });
-          this.isChangingPassword = false;
-        }
-        
         this.submitted = false;
+        
+        // Rafraîchir les données utilisateur
+        this.authService.refreshUserProfile().subscribe();
       },
       error: (error) => {
         this.updateError = error.error?.message || 'Erreur lors de la mise à jour du profil';
       }
     });
+  }
+  
+  // Nouvelle méthode séparée pour changer le mot de passe
+  onSubmitPasswordChange(): void {
+    this.passwordUpdateSuccess = false;
+    this.passwordUpdateError = null;
+    
+    if (this.passwordForm.invalid) {
+      return;
+    }
+    
+    const oldPassword = this.passwordForm.value.oldPassword || '';
+    const newPassword = this.passwordForm.value.newPassword || '';
+    
+    // Maintenant les variables sont garanties d'être de type string
+    this.authService.changePassword(oldPassword, newPassword).subscribe({
+    next: () => {
+      this.passwordUpdateSuccess = true;
+      this.passwordForm.reset();
+    },
+    error: (error) => {
+      this.passwordUpdateError = error.error?.error || 'Ancien mot de passe incorrect';
+    }
+  });
   }
 }

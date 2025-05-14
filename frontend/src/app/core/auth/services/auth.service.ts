@@ -113,7 +113,7 @@ export class AuthService {
   
   // Récupérer les informations de l'utilisateur actuel depuis l'API
   refreshUserProfile(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/users/profile`)
+    return this.http.get<User>(`${this.apiUrl}/users/view/profile`)
       .pipe(
         tap(user => {
           this.userSignal.set(user);
@@ -130,12 +130,30 @@ export class AuthService {
   
   // Met à jour le profil utilisateur
   updateProfile(userData: Partial<User>): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/users/profile`, userData)
+    return this.http.patch<User>(`${this.apiUrl}/users/action/profile`, userData)
       .pipe(
         tap(updatedUser => {
           this.userSignal.set(updatedUser);
         })
       );
+  }
+
+  /**
+  * Change le mot de passe de l'utilisateur connecté
+  */
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/users/action/profile/change-password`, {
+      oldPassword,
+      newPassword
+    }).pipe(
+      tap(() => {
+        console.log('Mot de passe modifié avec succès');
+      }),
+      catchError(error => {
+        console.error('Erreur lors de la modification du mot de passe', error);
+        return throwError(() => error);
+      })
+    );
   }
   
   private getUserFromStorage(): User | null {

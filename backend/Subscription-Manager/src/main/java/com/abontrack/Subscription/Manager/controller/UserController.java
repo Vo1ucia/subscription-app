@@ -8,10 +8,12 @@ import com.abontrack.Subscription.Manager.dto.PasswordRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication; 
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -85,6 +87,94 @@ public class UserController {
                     .body("Incorrect old password");
         }
     }
+
+    @GetMapping("/view/profile")
+    public ResponseEntity<UserDTO> getCurrentUserProfile(Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        // Récupérer le username depuis l'objet Authentication
+        String username = authentication.getName();
+        
+        // Utiliser votre service existant
+        User user = userService.getUserByUsername(username);
+        
+        // Convertir en DTO avec votre méthode existante
+        return ResponseEntity.ok(convertToDTO(user));
+    }
+
+    @PatchMapping("/action/profile")
+    public ResponseEntity<UserDTO> updateUserProfile(
+            Authentication authentication, 
+            @Valid @RequestBody UserDTO userData) {
+        
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        // Récupérer le username depuis l'authentification
+        String username = authentication.getName();
+        
+        // Récupérer l'utilisateur actuel
+        User currentUser = userService.getUserByUsername(username);
+        
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        
+        // Ne mettre à jour que les champs fournis
+        // Remarque: nous ne permettons pas de changer le mot de passe par cette méthode
+        if (userData.getUsername() != null && !userData.getUsername().isEmpty()) {
+            currentUser.setUsername(userData.getUsername());
+        }
+        
+        if (userData.getEmail() != null && !userData.getEmail().isEmpty()) {
+            currentUser.setEmail(userData.getEmail());
+        }
+        
+        // N'oubliez pas d'ajouter d'autres champs si votre UserDTO en contient plus
+        
+        // Mettre à jour l'utilisateur
+        User updatedUser = userService.updateUser(currentUser.getId(), currentUser);
+        
+        // Convertir en DTO et renvoyer
+        return ResponseEntity.ok(convertToDTO(updatedUser));
+    }
+
+    @PostMapping("/action/profile/change-password")
+    public ResponseEntity<?> changeCurrentUserPassword(
+            Authentication authentication,
+            @Valid @RequestBody PasswordRequest request) {
+        
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        // Récupérer le username depuis l'objet Authentication
+        String username = authentication.getName();
+        
+        // Récupérer l'utilisateur complet depuis la base de données
+        User user = userService.getUserByUsername(username);
+        
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        
+        // Appeler la méthode de service pour changer le mot de passe
+        boolean success = userService.changePassword(
+                user.getId(), 
+                request.getOldPassword(), 
+                request.getNewPassword());
+        
+        if (success) {
+            return ResponseEntity.ok().body(Map.of("message", "Mot de passe modifié avec succès"));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Ancien mot de passe incorrect"));
+        }
+    }
+
 
     // Méthode utilitaire pour convertir une entité en DTO
     private UserDTO convertToDTO(User user) {
