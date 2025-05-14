@@ -1,0 +1,17 @@
+<div class="chart-container w-full h-full flex items-center justify-center">
+  <!-- Message quand aucune donnée n'est disponible -->
+  <div *ngIf="!hasData()" class="text-gray-500 text-center p-6">
+    <p>Pas assez de données pour générer un graphique.</p>
+  </div>
+  
+  <!-- Graphique en camembert -->
+  <div *ngIf="hasData()" class="w-full">
+    <apx-chart
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [labels]="chartOptions.labels"
+      [responsive]="chartOptions.responsive"
+      [colors]="chartOptions.colors"
+    ></apx-chart>
+  </div>
+</div>

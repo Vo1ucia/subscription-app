@@ -1,0 +1,153 @@
+<!-- src/app/auth/profile/profile.component.html -->
+<div class="container mx-auto p-4 max-w-3xl">
+  <div class="bg-white rounded-lg shadow-md p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Mon profil</h1>
+    
+    <!-- Message de succès -->
+    <div *ngIf="updateSuccess" class="mb-4 p-3 rounded bg-green-50 text-green-600 text-sm">
+      Profil mis à jour avec succès !
+    </div>
+    
+    <!-- Message d'erreur -->
+    <div *ngIf="updateError" class="mb-4 p-3 rounded bg-red-50 text-red-600 text-sm">
+      {{ updateError }}
+    </div>
+    
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Nom d'utilisateur (désactivé) -->
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Nom d'utilisateur</label>
+          <input
+            id="username"
+            type="text"
+            formControlName="username"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
+            readonly
+          />
+          <p class="mt-1 text-xs text-gray-500">Le nom d'utilisateur ne peut pas être modifié</p>
+        </div>
+        
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            [ngClass]="{'border-red-500': submitted && profileForm.controls['email'].errors}"
+          />
+          <div *ngIf="submitted && profileForm.controls['email'].errors" class="mt-1 text-xs text-red-500">
+            <div *ngIf="profileForm.controls['email'].errors['required']">L'email est requis</div>
+            <div *ngIf="profileForm.controls['email'].errors['email']">Format d'email invalide</div>
+          </div>
+        </div>
+        
+        <!-- Prénom -->
+        <div>
+          <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">Prénom (optionnel)</label>
+          <input
+            id="firstName"
+            type="text"
+            formControlName="firstName"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+        
+        <!-- Nom -->
+        <div>
+          <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Nom (optionnel)</label>
+          <input
+            id="lastName"
+            type="text"
+            formControlName="lastName"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+      </div>
+      
+      <!-- Section changement de mot de passe -->
+      <div class="mt-8">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-medium text-gray-800">Changer de mot de passe</h2>
+          <button 
+            type="button" 
+            (click)="togglePasswordChange()" 
+            class="text-sm text-blue-600 hover:text-blue-500"
+          >
+            {{ isChangingPassword ? 'Annuler' : 'Modifier' }}
+          </button>
+        </div>
+        
+        <div *ngIf="isChangingPassword" class="mt-4 space-y-4 animate-fadeIn">
+          <!-- Mot de passe actuel -->
+          <div>
+            <label for="currentPassword" class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
+            <input
+              id="currentPassword"
+              type="password"
+              formControlName="currentPassword"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              [ngClass]="{'border-red-500': submitted && profileForm.controls['currentPassword'].errors}"
+            />
+            <div *ngIf="submitted && profileForm.controls['currentPassword'].errors" class="mt-1 text-xs text-red-500">
+              <div *ngIf="profileForm.controls['currentPassword'].errors['required']">Le mot de passe actuel est requis</div>
+            </div>
+          </div>
+          
+          <!-- Nouveau mot de passe -->
+          <div>
+            <label for="newPassword" class="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe</label>
+            <input
+              id="newPassword"
+              type="password"
+              formControlName="newPassword"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              [ngClass]="{'border-red-500': submitted && profileForm.controls['newPassword'].errors}"
+            />
+            <div *ngIf="submitted && profileForm.controls['newPassword'].errors" class="mt-1 text-xs text-red-500">
+              <div *ngIf="profileForm.controls['newPassword'].errors['required']">Le nouveau mot de passe est requis</div>
+              <div *ngIf="profileForm.controls['newPassword'].errors['minlength']">Le mot de passe doit contenir au moins 6 caractères</div>
+            </div>
+            <!-- Suite de src/app/auth/profile/profile.component.html -->
+          </div>
+          
+          <!-- Confirmation du nouveau mot de passe -->
+          <div>
+            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirmer le nouveau mot de passe</label>
+            <input
+              id="confirmPassword"
+              type="password"
+              formControlName="confirmPassword"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              [ngClass]="{'border-red-500': submitted && (profileForm.controls['confirmPassword'].errors || profileForm.errors?.['passwordMismatch'])}"
+            />
+            <div *ngIf="submitted && (profileForm.controls['confirmPassword'].errors || profileForm.errors?.['passwordMismatch'])" class="mt-1 text-xs text-red-500">
+              <div *ngIf="profileForm.controls['confirmPassword'].errors?.['required']">La confirmation du mot de passe est requise</div>
+              <div *ngIf="profileForm.errors?.['passwordMismatch']">Les mots de passe ne correspondent pas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Boutons d'action -->
+      <div class="mt-8 flex justify-end space-x-3">
+        <a 
+          routerLink="/dashboard" 
+          class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+        >
+          Annuler
+        </a>
+        <button
+          type="submit"
+          class="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-md hover:bg-black transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center"
+          [disabled]="authService.loading()"
+        >
+          <span *ngIf="authService.loading()" class="mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+          Enregistrer les modifications
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

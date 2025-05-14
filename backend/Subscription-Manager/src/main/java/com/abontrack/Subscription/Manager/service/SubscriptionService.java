@@ -125,6 +125,14 @@ public class SubscriptionService {
         subscriptionRepository.save(subscription);
     }
 
+    @Transactional
+    public void activateSubscription(Long id) {
+        Subscription subscription = getSubscriptionById(id);
+        subscription.setActive(true);
+        subscriptionRepository.save(subscription);
+    }
+
+
     @Transactional(readOnly = true)
     public List<Subscription> getUpcomingPayments(Long userId, int daysAhead) {
         LocalDate today = LocalDate.now();

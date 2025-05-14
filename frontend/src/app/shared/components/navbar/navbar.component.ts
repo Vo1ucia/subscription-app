@@ -1,18 +1,20 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+// Composant TypeScript (navbar.component.ts)
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { AuthService } from '../../../core/auth/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-  @Input() showAddButton: boolean = false;
-  @Output() addButtonClicked = new EventEmitter<void>();
+  public authService = inject(AuthService);
   
-  onAddButtonClick(): void {
-    this.addButtonClicked.emit();
+  logout(): void {
+    this.authService.logout();
   }
 }

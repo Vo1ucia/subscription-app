@@ -1,14 +1,27 @@
+<!-- Template HTML (navbar.component.html) -->
 <nav class="bg-white shadow-sm py-4 px-6">
-    <div class="max-w-5xl mx-auto flex justify-between items-center">
-      <div class="flex items-center">
-        <span class="text-lg font-bold text-gray-800">
-          <i class="fa fa-credit-card mr-2"></i> SubsManage
-        </span>
-      </div>
-      
-      <div class="flex space-x-4">
-        <a href="#" class="text-gray-600 hover:text-gray-900">Se connecter</a>
-        <a href="#" class="text-gray-600 hover:text-gray-900">Paramètres</a>
-      </div>
+  <div class="max-w-5xl mx-auto flex justify-between items-center">
+    <div class="flex items-center">
+      <a routerLink="/" class="text-lg font-bold text-gray-800">
+        <i class="fa fa-credit-card mr-2"></i> SubsManage
+      </a>
     </div>
-  </nav>
+     
+    <!-- Menu pour utilisateurs non connectés -->
+    <div *ngIf="!authService.isAuthenticated()" class="flex space-x-4">
+      <a routerLink="/login" class="text-gray-600 hover:text-gray-900">Se connecter</a>
+      <a routerLink="/register" class="px-3 py-1 bg-gray-800 text-white rounded-md hover:bg-black transition-colors">S'inscrire</a>
+    </div>
+    
+    <!-- Menu pour utilisateurs connectés -->
+    <div *ngIf="authService.isAuthenticated()" class="flex items-center space-x-4">
+      <span class="text-sm text-gray-600">
+        {{ authService.user()?.username || 'Utilisateur' }}
+      </span>
+      <a routerLink="/profile" class="text-gray-600 hover:text-gray-900">Profil</a>
+      <a routerLink="/dashboard" class="text-gray-600 hover:text-gray-900">Dashboard</a>
+      <a routerLink="/subscriptions" class="text-gray-600 hover:text-gray-900">Abonnements</a>
+      <button (click)="logout()" class="text-gray-600 hover:text-gray-900">Déconnexion</button>
+    </div>
+  </div>
+</nav>

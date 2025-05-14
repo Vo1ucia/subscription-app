@@ -1,8 +1,7 @@
 // charts.component.ts
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SubscriptionService } from '../../../core/services/subscription.service';
-import { CategoryExpense } from '../../../core/models/subscription';
+import { CategoryService } from '../../../core/services/category.service';
 
 // Import ng-apexcharts
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -13,6 +12,12 @@ import {
   ChartComponent
 } from 'ng-apexcharts';
 
+// Interface pour les données de catégories
+export interface CategoryExpense {
+  category: string;
+  amount: number;
+}
+
 // Interface pour les options du graphique
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -22,7 +27,6 @@ export type ChartOptions = {
   colors: string[];
 };
 
-
 @Component({
   selector: 'app-charts',
   standalone: true,
@@ -30,11 +34,13 @@ export type ChartOptions = {
   templateUrl: './charts.component.html',
   styleUrl: './charts.component.scss'
 })
-
-export class ChartsComponent implements OnInit{
+export class ChartsComponent implements OnInit {
   @ViewChild("chart") chart!: ChartComponent;
+  @Input() expensesByCategory: CategoryExpense[] = [];
   
-  private subscriptionService = inject(SubscriptionService);
+  private categoryService = inject(CategoryService);
+  
+  public hasData = signal(false);
   
   public chartOptions: ChartOptions = {
     series: [],
@@ -66,25 +72,29 @@ export class ChartsComponent implements OnInit{
     ]
   };
   
-  public hasData = false;
-  
   ngOnInit(): void {
-    // S'abonner aux changements de données
-    this.subscriptionService.subscriptions$.subscribe(() => {
-      this.updateChartData();
-    });
-    
     // Initialiser les données
     this.updateChartData();
   }
   
+  ngOnChanges(): void {
+    // Mettre à jour le graphique quand les données d'entrée changent
+    this.updateChartData();
+  }
+  
   updateChartData(): void {
-    const categoryExpenses = this.subscriptionService.getExpensesByCategory();
+    if (!this.expensesByCategory || this.expensesByCategory.length === 0) {
+      this.hasData.set(false);
+      return;
+    }
+    
+    // Créer une copie pour éviter de modifier l'original
+    const categoryExpenses = [...this.expensesByCategory];
     
     // Vérifier s'il y a des données
-    this.hasData = categoryExpenses.length > 0;
+    this.hasData.set(categoryExpenses.length > 0);
     
-    if (this.hasData) {
+    if (this.hasData()) {
       // Trier par montant (du plus élevé au plus bas)
       categoryExpenses.sort((a, b) => b.amount - a.amount);
       
@@ -114,6 +124,15 @@ export class ChartsComponent implements OnInit{
   
   // Mettre en majuscule la première lettre et traduire la catégorie
   formatCategoryName(category: string): string {
+    // Utiliser les catégories du service si disponible
+    const categories = this.categoryService.categories();
+    const foundCategory = categories.find(c => c.name === category || c.id?.toString() === category);
+    
+    if (foundCategory) {
+      return foundCategory.name;
+    }
+    
+    // Fallback sur les traductions statiques
     const categoryTranslations: {[key: string]: string} = {
       'streaming': 'Streaming',
       'music': 'Musique',
@@ -123,6 +142,7 @@ export class ChartsComponent implements OnInit{
       'other': 'Autres'
     };
     
-    return categoryTranslations[category] || category.charAt(0).toUpperCase() + category.slice(1);
+    return categoryTranslations[category] || 
+           (typeof category === 'string' ? category.charAt(0).toUpperCase() + category.slice(1) : 'Non catégorisé');
   }
 }

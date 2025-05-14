@@ -1,0 +1,60 @@
+<div>
+    <!-- Titre du dashboard -->
+    <h2 class="text-lg font-bold text-gray-800 mb-4">Dashboard</h2>
+   
+    <!-- Affichage pendant le chargement -->
+    <div *ngIf="subscriptionService.loading()" class="flex justify-center py-8">
+      <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-800"></div>
+    </div>
+    
+    <!-- Message d'erreur -->
+    <div *ngIf="subscriptionService.error()" class="p-4 mb-4 text-sm rounded-md bg-red-50 text-red-600 border border-red-200">
+      {{ subscriptionService.error() }}
+    </div>
+   
+    <!-- Contenu du dashboard (visible quand les données sont chargées) -->
+    <div *ngIf="!subscriptionService.loading() && subscriptionService.subscriptions().length > 0" class="animate-fadeIn">
+      <!-- Grille des statistiques et graphique -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Statistiques côté gauche -->
+        <div class="md:col-span-1 space-y-4">
+          <!-- Carte dépense mensuelle -->
+          <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Total dépense mensuelle</h3>
+            <p class="text-2xl font-bold text-gray-900">{{ subscriptionService.monthlyTotal() | currency:'EUR':'symbol':'1.2-2' }}</p>
+            <p class="text-xs text-gray-500 mt-2">
+              {{ subscriptionService.yearlyTotal() | currency:'EUR':'symbol':'1.2-2' }} par an
+            </p>
+          </div>
+         
+          <!-- Carte nombre d'abonnements -->
+          <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Total abonnements</h3>
+            <p class="text-2xl font-bold text-gray-900">{{ subscriptionService.subscriptionCount() }}</p>
+          </div>
+          
+          <!-- Catégorie la plus coûteuse (si elle existe) -->
+          <div *ngIf="topCategory()" class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Catégorie la plus coûteuse</h3>
+            <div class="flex items-center justify-between">
+              <p class="text-xl font-bold text-gray-900">{{ topCategory()?.category }}</p>
+              <p class="text-base font-semibold text-gray-700">{{ topCategory()?.amount | currency:'EUR':'symbol':'1.2-2' }}</p>
+            </div>
+          </div>
+        </div>
+       
+        <!-- Graphique en camembert côté droit -->
+        <div class="md:col-span-2 bg-white border border-gray-200 rounded-lg p-4 shadow-sm flex items-center justify-center">
+          <app-charts [expensesByCategory]="subscriptionService.expensesByCategory()"></app-charts>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Message quand aucun abonnement n'est trouvé -->
+    <div *ngIf="!subscriptionService.loading() && subscriptionService.subscriptions().length === 0" class="bg-white border border-gray-200 rounded-lg p-6 text-center text-gray-500">
+      <p>Pas d'abonnements trouvés. Ajoutez votre premier abonnement pour voir les statistiques.</p>
+      <button routerLink="/subscriptions/new" class="mt-4 px-4 py-2 text-sm font-medium text-white bg-gray-800 hover:bg-black rounded-md shadow-sm transition-all duration-200">
+        Ajouter un abonnement
+      </button>
+    </div>
+  </div>

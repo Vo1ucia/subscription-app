@@ -81,6 +81,12 @@ public class SubscriptionController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/activate")
+    public ResponseEntity<Void> activateSubscription(@PathVariable Long id) {
+        subscriptionService.activateSubscription(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/user/{userId}/upcoming")
     public ResponseEntity<List<SubscriptionDTO>> getUpcomingPayments(
             @PathVariable Long userId, 

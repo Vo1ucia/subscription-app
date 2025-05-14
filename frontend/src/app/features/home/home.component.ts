@@ -1,11 +1,10 @@
-import { Component, signal  } from '@angular/core';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { SubscriptionListComponent } from './subscription-list/subscription-list.component';
-import { SubscriptionFormComponent } from './subscription-form/subscription-form.component';
+import { Component, inject  } from '@angular/core';
+import { DashboardComponent } from '../dashboard/dashboard.component';
+import { SubscriptionListComponent } from '../subscriptions/subscription-list/subscription-list.component';
 import { CommonModule } from '@angular/common';
-import { ChartComponent } from 'ng-apexcharts';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
-import { ChartsComponent } from "./charts/charts.component";
+import { AuthService } from '../../core/auth/services/auth.service';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -15,9 +14,17 @@ import { ChartsComponent } from "./charts/charts.component";
     DashboardComponent,
     SubscriptionListComponent,
     NavbarComponent,
+    RouterOutlet
 ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
+    public authService = inject(AuthService);
+  
+  ngOnInit(): void {
+    // Si l'utilisateur est authentifié, charger les données nécessaires
+    if (this.authService.isAuthenticated()) {
+    }
+  }
 }

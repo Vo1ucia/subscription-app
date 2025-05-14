@@ -4,6 +4,8 @@ import { SubscriptionService } from '../../../core/services/subscription.service
 import { SubscriptionCardComponent } from '../../../shared/components/subscription-card/subscription-card.component';
 import { CommonModule } from '@angular/common';
 import { SubscriptionFormComponent } from '../subscription-form/subscription-form.component';
+import { CategoryService } from '../../../core/services/category.service';
+import { PaymentFrequencyService } from '../../../core/services/paymentfrequency.service';
 
 
 @Component({
@@ -15,17 +17,19 @@ import { SubscriptionFormComponent } from '../subscription-form/subscription-for
 })
 
 export class SubscriptionListComponent {
-  private subscriptionService = inject(SubscriptionService);
-  subscriptions: Subscription[] = [];
+
   showForm = false;
   currentSubscription: Subscription | null = null;
-  
+
+  constructor(
+    public subscriptionService: SubscriptionService,
+  ) {}
+
   ngOnInit(): void {
-    this.subscriptionService.subscriptions$.subscribe(subs => {
-      this.subscriptions = subs;
-    });
+    // Charger les données nécessaires
+    this.subscriptionService.loadAll();
   }
-  
+
   showAddForm(): void {
     this.currentSubscription = null; // Mode ajout
     this.showForm = true;
@@ -41,8 +45,10 @@ export class SubscriptionListComponent {
     this.currentSubscription = null;
   }
   
-  onDelete(id: string): void {
-    this.subscriptionService.deleteSubscription(id);
+  onDelete(id: number): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet abonnement ?')) {
+      this.subscriptionService.delete(id).subscribe();
+    }
   }
   
   onSubscriptionAdded(): void {
