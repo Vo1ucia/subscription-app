@@ -37,7 +37,7 @@ export class LoginComponent {
     this.authService.login(username || '', password || '').subscribe({
       next: () => {
         // Rediriger vers l'URL de retour ou le dashboard
-        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/main';
         this.router.navigateByUrl(returnUrl);
       },
       error: () => {

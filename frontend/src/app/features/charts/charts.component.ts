@@ -1,7 +1,7 @@
 // charts.component.ts
 import { Component, Input, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CategoryService } from '../../../core/services/category.service';
+import { CategoryService } from '../../core/services/category.service';
 
 // Import ng-apexcharts
 import { NgApexchartsModule } from 'ng-apexcharts';

@@ -6,7 +6,7 @@ export const routes: Routes = [
   // Route principale - page d'accueil
   {
     path: '',
-    loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent),
+    loadComponent: () => import('./features/main/main.component').then(m => m.MainComponent),
     canActivate: [authGuard] // Protéger la page d'accueil
   },
   
