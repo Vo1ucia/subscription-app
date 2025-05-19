@@ -91,7 +91,8 @@ export class SubscriptionService {
       .pipe(
         tap({
           next: (data) => {
-            this.subscriptionsSignal.set(data);
+            const mapped = data.map(item => this.mapToSubscription(item));
+            this.subscriptionsSignal.set(mapped);
             this.loadingSignal.set(false);
           },
           error: (err) => {
@@ -108,12 +109,21 @@ export class SubscriptionService {
   }
 
   create(subscription: Subscription): Observable<Subscription> {
+
+    const categoryId = typeof subscription.category === 'number'
+    ? subscription.category
+    : subscription.category?.id;
+
+    const paymentFrequencyId = typeof subscription.paymentFrequency === 'number'
+      ? subscription.paymentFrequency
+      : subscription.paymentFrequency?.id;
+
     const subscriptionRequest = {
       name: subscription.name,
       description: subscription.description || '',
       price: subscription.price, 
-      categoryId: subscription.category,
-      paymentFrequencyId: subscription.paymentFrequency,
+      categoryId: categoryId,
+      paymentFrequencyId: paymentFrequencyId,
       userId: this.authService.user()?.id, 
       startDate: subscription.startDate,
       nextPaymentDate: subscription.nextPaymentDate || subscription.startDate, 
@@ -130,11 +140,28 @@ export class SubscriptionService {
   }
 
   update(id: number, subscription: Partial<Subscription>): Observable<Subscription> {
-    return this.apiService.put<Subscription>(`${this.endpoint}/${id}`, subscription)
+    const categoryId = typeof subscription.category === 'number'? subscription.category: subscription.category?.id;
+    const paymentFrequencyId = typeof subscription.paymentFrequency === 'number'? subscription.paymentFrequency: subscription.paymentFrequency?.id;
+
+    const subscriptionRequest = {
+      name: subscription.name,
+      description: subscription.description || '',
+      price: subscription.price, 
+      categoryId: categoryId,
+      paymentFrequencyId: paymentFrequencyId,
+      userId: id, 
+      startDate: subscription.startDate,
+      nextPaymentDate: subscription.nextPaymentDate || subscription.startDate, 
+      autoRenew: subscription.autoRenew !== undefined ? subscription.autoRenew : true,
+      active: true
+    };
+
+    return this.apiService.put<Subscription>(`${this.endpoint}/${id}`, subscriptionRequest)
       .pipe(
-        tap((updatedSubscription) => {
-          this.subscriptionsSignal.update(subs => 
-            subs.map(s => s.id === id ? updatedSubscription : s)
+        tap((updatedSubscription) => {      
+          const mapped = this.mapToSubscription(updatedSubscription);
+          this.subscriptionsSignal.update(subs =>
+            subs.map(s => s.id === id ? mapped : s)
           );
         })
       );
@@ -160,6 +187,36 @@ export class SubscriptionService {
           );
         })
       );
+  }
+
+  private mapToSubscription(apiData: any): Subscription {
+    return {
+        id: apiData.id,
+        name: apiData.name,
+        description: apiData.description,
+        price: apiData.price,
+        startDate: new Date(apiData.startDate),
+        nextPaymentDate: apiData.nextPaymentDate ? new Date(apiData.nextPaymentDate) : undefined,
+        active: apiData.active,
+        autoRenew: apiData.autoRenew,
+
+        user: apiData.user,
+
+        category: apiData.category
+          ? apiData.category // ✅ objet complet
+          : {
+              id: apiData.categoryId,
+              name: apiData.categoryName
+            },
+
+        paymentFrequency: apiData.paymentFrequency
+          ? apiData.paymentFrequency // ✅ objet complet
+          : {
+              id: apiData.paymentFrequencyId,
+              name: apiData.paymentFrequencyName,
+              months: apiData.monthsInterval
+            }
+      };
   }
 
  /**

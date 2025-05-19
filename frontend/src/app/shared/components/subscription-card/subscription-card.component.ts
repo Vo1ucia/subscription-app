@@ -60,6 +60,7 @@ export class SubscriptionCardComponent {
   }
   
   getCategoryName(): string {
+    console.log(this.subscription);
     if (typeof this.subscription.category === 'object' && this.subscription.category) {
       return this.subscription.category.name;
     } else if (typeof this.subscription.category === 'number') {

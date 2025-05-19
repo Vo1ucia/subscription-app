@@ -1,12 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject,effect } from '@angular/core';
 import { Subscription } from '../../../core/models/subscription';
 import { SubscriptionService } from '../../../core/services/subscription.service';
 import { SubscriptionCardComponent } from '../../../shared/components/subscription-card/subscription-card.component';
 import { CommonModule } from '@angular/common';
 import { SubscriptionFormComponent } from '../subscription-form/subscription-form.component';
-import { CategoryService } from '../../../core/services/category.service';
-import { PaymentFrequencyService } from '../../../core/services/paymentfrequency.service';
-
 
 @Component({
   selector: 'app-subscription-list',
@@ -21,9 +18,10 @@ export class SubscriptionListComponent {
   showForm = false;
   currentSubscription: Subscription | null = null;
   subService = inject(SubscriptionService);
+  
 
   ngOnInit(): void {
-    this.subService.loadSubscriptionsForCurrentUser();
+    this.subService.loadSubscriptionsForCurrentUser();   
   }
 
   showAddForm(): void {
@@ -41,28 +39,10 @@ export class SubscriptionListComponent {
     this.currentSubscription = null;
   }
   
-  onSubscriptionAdded(): void {
-    this.hideForm();
-  }
-  
   onSubscriptionUpdated(): void {
     this.hideForm();
   }
-
-  saveSubscription(subscription: Subscription) {
-    if (subscription.id) {
-      this.subService.update(subscription.id, subscription).subscribe({
-        next: () => this.hideForm(),
-        error: (err) => console.error('Erreur lors de la mise à jour:', err)
-      });
-    } else {
-      this.subService.create(subscription).subscribe({
-        next: () => this.hideForm(),
-        error: (err) => console.error('Erreur lors de la création:', err)
-      });
-    }
-  }
-
+  
   onDelete(id: number) {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet abonnement ?')) {
       this.subService.delete(id).subscribe({

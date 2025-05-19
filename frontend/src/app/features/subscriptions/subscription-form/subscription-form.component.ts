@@ -133,7 +133,7 @@ export class SubscriptionFormComponent implements OnInit{
       this.subscriptionService.create(formData).subscribe({
         next: () => {
           this.isSubmitting = false;
-          this.subscriptionAdded.emit();
+          this.subscriptionUpdated.emit();
         },
         error: (error) => {
           console.error('Erreur lors de la création:', error);
