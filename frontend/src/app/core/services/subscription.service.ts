@@ -1,8 +1,9 @@
-import { Injectable,signal, computed } from '@angular/core';
+import { Injectable,signal, computed, inject, effect } from '@angular/core';
 import { Subscription } from '../models/subscription';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, throwError } from 'rxjs';
 import { SubscriptionStats } from '../models/subscriptionStats';
 import { ApiService } from './api.service';
+import { AuthService } from '../auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,17 +15,53 @@ export class SubscriptionService {
   private subscriptionsSignal = signal<Subscription[]>([]);
   private loadingSignal = signal<boolean>(false);
   private errorSignal = signal<string | null>(null);
+
+  //Injections
+  private apiService = inject(ApiService);
+  private authService = inject(AuthService);
+
+  // Statistiques basées sur les abonnements de l'utilisateur actuel
   public monthlyTotal = computed(() => this.calculateMonthlyTotal());
   public yearlyTotal = computed(() => this.monthlyTotal() * 12);
   public subscriptionCount = computed(() => this.subscriptionsSignal().length);
   public expensesByCategory = computed(() => this.calculateExpensesByCategory());
   public stats = computed(() => this.calculateSubscriptionStats());
   
+  // Signaux publics en lecture seule
   public subscriptions = this.subscriptionsSignal.asReadonly();
   public loading = this.loadingSignal.asReadonly();
   public error = this.errorSignal.asReadonly();
 
-  constructor(private apiService: ApiService) { }
+  constructor() { 
+    // Charger les abonnements au démarrage si l'utilisateur est connecté
+    if (this.authService.isAuthenticated()) {
+      this.loadSubscriptionsForCurrentUser();
+    }
+    
+    // Effet pour recharger les abonnements quand l'utilisateur change
+    effect(() => {
+      const isAuth = this.authService.isAuthenticated();
+      if (isAuth) {
+        this.loadSubscriptionsForCurrentUser();
+      } else {
+        // Vider les abonnements si l'utilisateur se déconnecte
+        this.subscriptionsSignal.set([]);
+      }
+    });
+  }
+  /**
+   * Charge les abonnements pour l'utilisateur actuellement connecté
+   */
+  loadSubscriptionsForCurrentUser(): void {
+    const user = this.authService.user();
+    
+    if (!user || user.id === undefined) {
+      this.errorSignal.set('Aucun utilisateur connecté ou ID utilisateur invalide');
+      return;
+    }
+    
+    this.loadByUserId(user.id);
+  }
 
   loadAll(params?: Record<string, any>): void {
     this.loadingSignal.set(true);
@@ -71,7 +108,20 @@ export class SubscriptionService {
   }
 
   create(subscription: Subscription): Observable<Subscription> {
-    return this.apiService.post<Subscription>(this.endpoint, subscription)
+    const subscriptionRequest = {
+      name: subscription.name,
+      description: subscription.description || '',
+      price: subscription.price, 
+      categoryId: subscription.category,
+      paymentFrequencyId: subscription.paymentFrequency,
+      userId: this.authService.user()?.id, 
+      startDate: subscription.startDate,
+      nextPaymentDate: subscription.nextPaymentDate || subscription.startDate, 
+      autoRenew: subscription.autoRenew !== undefined ? subscription.autoRenew : true,
+      active: true
+    };
+    
+    return this.apiService.post<Subscription>(this.endpoint, subscriptionRequest)
       .pipe(
         tap((newSubscription) => {
           this.subscriptionsSignal.update(subs => [...subs, newSubscription]);
@@ -187,7 +237,7 @@ export class SubscriptionService {
    */
   private getMonthlyValue(subscription: Subscription): number {
     // Adapter pour utiliser le modèle paymentFrequency
-    const amount = subscription.amount || 0;
+    const amount = subscription.price || 0;
     
     // Vérifier si paymentFrequency est un objet ou un ID
     if (typeof subscription.paymentFrequency === 'object' && subscription.paymentFrequency) {

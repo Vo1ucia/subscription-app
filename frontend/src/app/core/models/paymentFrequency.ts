@@ -1,5 +1,5 @@
 export interface PaymentFrequency {
-  id?: number;
+  id: number;
   name: string;
   months: number;
   description?: string;

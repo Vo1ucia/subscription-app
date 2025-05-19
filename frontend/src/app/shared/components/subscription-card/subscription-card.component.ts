@@ -38,7 +38,7 @@ export class SubscriptionCardComponent {
   }
 
   getMonthlyPrice(): number {
-    const amount = this.subscription.amount || 0;
+    const amount = this.subscription.price || 0;
     const frequency = this.getPaymentFrequency();
     
     if (!frequency || !frequency.months) {
@@ -49,7 +49,7 @@ export class SubscriptionCardComponent {
   }
 
    formatOriginalPrice(): string {
-    const amount = this.subscription.amount || 0;
+    const amount = this.subscription.price || 0;
     const frequency = this.getPaymentFrequency();
     
     if (!frequency || !frequency.name) {

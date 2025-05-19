@@ -22,6 +22,9 @@ export class MainComponent {
   ngOnInit(): void {
     // Si l'utilisateur est authentifié, charger les données nécessaires
     if (this.authService.isAuthenticated()) {
+      this.authService.refreshUserProfile().subscribe({
+        error: (err) => console.error('Erreur', err)
+      });
     }
   }
 }

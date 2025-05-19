@@ -28,12 +28,12 @@
           
           <!-- Prix (renommé en amount) -->
           <div>
-            <label for="amount" class="block text-sm font-medium text-gray-700">Prix (€)</label>
-            <input type="number" id="amount" formControlName="amount" step="0.01"
+            <label for="price" class="block text-sm font-medium text-gray-700">Prix (€)</label>
+            <input type="price" id="price" formControlName="price" step="0.01"
                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            <div *ngIf="submitted && subscriptionForm.controls['amount'].errors" class="text-red-500 text-xs mt-1">
-              <div *ngIf="subscriptionForm.controls['amount'].errors['required']">Le prix est requis</div>
-              <div *ngIf="subscriptionForm.controls['amount'].errors['min']">Le prix doit être supérieur à 0</div>
+            <div *ngIf="submitted && subscriptionForm.controls['price'].errors" class="text-red-500 text-xs mt-1">
+              <div *ngIf="subscriptionForm.controls['price'].errors['required']">Le prix est requis</div>
+              <div *ngIf="subscriptionForm.controls['price'].errors['min']">Le prix doit être supérieur à 0</div>
             </div>
           </div>
           
@@ -79,8 +79,8 @@
           
           <!-- Date de fin (optionnel) -->
           <div>
-            <label for="endDate" class="block text-sm font-medium text-gray-700">Date de fin (optionnel)</label>
-            <input type="date" id="endDate" formControlName="endDate"
+            <label for="nextPaymentDate" class="block text-sm font-medium text-gray-700">Date de fin (optionnel)</label>
+            <input type="date" id="nextPaymentDate" formControlName="nextPaymentDate"
                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
           </div>
           

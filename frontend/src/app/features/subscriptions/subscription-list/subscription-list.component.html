@@ -8,34 +8,34 @@
       </button>
     </div>
 
-    <div *ngIf="subscriptionService.loading()" class="flex justify-center py-6">
+    <div *ngIf="subService.loading()" class="flex justify-center py-6">
       <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
     </div>
     
     <!-- Message d'erreur -->
-    <div *ngIf="subscriptionService.error()" class="p-4 mb-4 text-sm rounded-md bg-red-50 text-red-600 border border-red-200">
-      {{ subscriptionService.error() }}
+    <div *ngIf="subService.error()" class="p-4 mb-4 text-sm rounded-md bg-red-50 text-red-600 border border-red-200">
+      {{ subService.error() }}
     </div>
     
     <!-- Liste des abonnements utilisant le composant card -->
     <div class="flex flex-wrap gap-6">
-      <app-subscription-card 
-        *ngFor="let subscription of subscriptionService.subscriptions()" 
-        [subscription]="subscription"
-        (delete)="onDelete($event)"
-        (edit)="onEdit($event)">
-      </app-subscription-card>
+      <div *ngIf="!subService.loading() && subService.subscriptions().length > 0" 
+           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <app-subscription-card 
+          *ngFor="let subscription of subService.subscriptions()" 
+          [subscription]="subscription"
+          (edit)="onEdit($event)"
+          (delete)="onDelete($event)">
+        </app-subscription-card>
+      </div>
     </div>
-    
-    <div *ngIf="!subscriptionService.loading() && subscriptionService.subscriptions().length === 0" class="p-6 text-center text-gray-500">
-      <p>Aucun abonnement trouvé</p>
-    </div>
-  
-</div>
-  <!-- Formulaire en superposition -->
-  <app-subscription-form *ngIf="showForm" 
-      [subscription]="currentSubscription"
-      (cancel)="hideForm()" 
-      (subscriptionAdded)="onSubscriptionAdded()"
-      (subscriptionUpdated)="onSubscriptionUpdated()">
+  </div>
+
+@if (showForm) {
+  <app-subscription-form
+    [subscription]="currentSubscription"
+    (cancel)="hideForm()"
+    (subscriptionAdded)="onSubscriptionAdded()"
+    (subscriptionUpdated)="onSubscriptionUpdated()">
   </app-subscription-form>
+}

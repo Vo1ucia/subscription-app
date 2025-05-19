@@ -30,9 +30,9 @@
           <span class="text-gray-500">Date de début:</span>
           <span class="font-medium text-gray-700">{{ formatDate(subscription.startDate) }}</span>
         </div>
-        <div *ngIf="subscription.endDate" class="flex justify-between">
+        <div *ngIf="subscription.nextPaymentDate" class="flex justify-between">
           <span class="text-gray-500">Date de fin:</span>
-          <span class="font-medium text-gray-700">{{ formatDate(subscription.endDate) }}</span>
+          <span class="font-medium text-gray-700">{{ formatDate(subscription.nextPaymentDate) }}</span>
         </div>
         <div *ngIf="subscription.description" class="pt-1">
           <span class="text-gray-500">Description:</span>

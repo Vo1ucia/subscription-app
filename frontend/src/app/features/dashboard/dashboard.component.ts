@@ -11,7 +11,7 @@ import { ChartsComponent } from "../charts/charts.component";
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
    // Injection des services
   public subscriptionService = inject(SubscriptionService);
   
@@ -24,9 +24,4 @@ export class DashboardComponent implements OnInit {
       (current.amount > prev.amount) ? current : prev
     );
   });
-  
-  ngOnInit(): void {
-    // Charger les abonnements au démarrage
-    this.subscriptionService.loadAll();
-  }
 }

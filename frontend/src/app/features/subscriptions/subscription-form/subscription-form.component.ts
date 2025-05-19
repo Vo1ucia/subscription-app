@@ -27,11 +27,11 @@ export class SubscriptionFormComponent implements OnInit{
 
   subscriptionForm = this.fb.group({
     name: ['', Validators.required],
-    amount: [0, [Validators.required, Validators.min(0.01)]],
+    price: [0, [Validators.required, Validators.min(0.01)]],
     paymentFrequency: [null as number | null, Validators.required],
     category: [null as number | null, Validators.required],
     startDate: ['', Validators.required],
-    endDate: [null as string | null],
+    nextPaymentDate: [null as string | null],
     active: [true],
     description: ['']
   });
@@ -64,11 +64,11 @@ export class SubscriptionFormComponent implements OnInit{
     
     this.subscriptionForm.patchValue({
       name: this.subscription.name,
-      amount: this.subscription.amount,
+      price: this.subscription.price,
       paymentFrequency: this.getPaymentFrequencyId(),
       category: this.getCategoryId(),
       startDate: this.formatDateForInput(this.subscription.startDate),
-      endDate: this.formatDateForInput(this.subscription.endDate),
+      nextPaymentDate: this.formatDateForInput(this.subscription.nextPaymentDate),
       active: this.subscription.active ?? true,
       description: this.subscription.description || ''
     });
@@ -148,16 +148,16 @@ export class SubscriptionFormComponent implements OnInit{
     
     // Convertir les dates de chaînes en objets Date
     const startDate = formValue.startDate ? new Date(formValue.startDate) : new Date();
-    const endDate = formValue.endDate ? new Date(formValue.endDate) : undefined;
+    const endDate = formValue.nextPaymentDate ? new Date(formValue.nextPaymentDate) : undefined;
     
     return {
       ...(this.subscription || {}),  // Préserver l'ID et d'autres champs si en mode édition
       name: formValue.name || '',
-      amount: parseFloat(formValue.amount?.toString() || '0'),
+      price: parseFloat(formValue.price?.toString() || '0'),
       paymentFrequency: formValue.paymentFrequency || null,
       category: formValue.category || null,
       startDate: startDate,
-      endDate: endDate,
+      nextPaymentDate: endDate,
       active: formValue.active ?? true,
       description: formValue.description || ''
     } as Subscription;

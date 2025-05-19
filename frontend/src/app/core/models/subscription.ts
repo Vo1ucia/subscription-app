@@ -6,13 +6,14 @@ export interface Subscription {
   id?: number;
   name: string;
   description?: string;
-  amount: number;
+  price: number;
   startDate: Date;
-  endDate?: Date;
+  nextPaymentDate?: Date;
   active: boolean;
   user?: User | number;
   category?: Category | number;
   paymentFrequency?: PaymentFrequency | number;
   createdAt?: Date;
   updatedAt?: Date;
+  autoRenew?: boolean;
 }

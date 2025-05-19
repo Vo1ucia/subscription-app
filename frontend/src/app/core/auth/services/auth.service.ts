@@ -1,5 +1,5 @@
 // src/app/services/auth.service.ts
-import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import { Injectable, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap, catchError, throwError } from 'rxjs';
@@ -31,6 +31,7 @@ export class AuthService {
   // Signaux
   private userSignal = signal<User | null>(this.getUserFromStorage());
   private tokenSignal = signal<string | null>(localStorage.getItem('token'));
+  
   private loadingSignal = signal<boolean>(false);
   private errorSignal = signal<string | null>(null);
   
@@ -64,6 +65,7 @@ export class AuthService {
       } else {
         localStorage.removeItem('currentUser');
       }
+
     });
   }
   

@@ -20,14 +20,10 @@ export class SubscriptionListComponent {
 
   showForm = false;
   currentSubscription: Subscription | null = null;
-
-  constructor(
-    public subscriptionService: SubscriptionService,
-  ) {}
+  subService = inject(SubscriptionService);
 
   ngOnInit(): void {
-    // Charger les données nécessaires
-    this.subscriptionService.loadAll();
+    this.subService.loadSubscriptionsForCurrentUser();
   }
 
   showAddForm(): void {
@@ -45,18 +41,35 @@ export class SubscriptionListComponent {
     this.currentSubscription = null;
   }
   
-  onDelete(id: number): void {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cet abonnement ?')) {
-      this.subscriptionService.delete(id).subscribe();
-    }
-  }
-  
   onSubscriptionAdded(): void {
     this.hideForm();
   }
   
   onSubscriptionUpdated(): void {
     this.hideForm();
+  }
+
+  saveSubscription(subscription: Subscription) {
+    if (subscription.id) {
+      this.subService.update(subscription.id, subscription).subscribe({
+        next: () => this.hideForm(),
+        error: (err) => console.error('Erreur lors de la mise à jour:', err)
+      });
+    } else {
+      this.subService.create(subscription).subscribe({
+        next: () => this.hideForm(),
+        error: (err) => console.error('Erreur lors de la création:', err)
+      });
+    }
+  }
+
+  onDelete(id: number) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet abonnement ?')) {
+      this.subService.delete(id).subscribe({
+        next: () => console.log('Abonnement supprimé avec succès'),
+        error: (err) => console.error('Erreur lors de la suppression:', err)
+      });
+    }
   }
 
 }
