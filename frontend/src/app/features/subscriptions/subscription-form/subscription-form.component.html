@@ -1,0 +1,120 @@
+<!-- Overlay qui couvre toute la page -->
+<div class="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center">
+  <!-- Conteneur de la popup -->
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 overflow-hidden animate-fadeIn">
+    <!-- En-tête de la popup -->
+    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+      <h2 class="text-lg font-medium text-gray-800">{{ isEditMode ? 'Modifier un abonnement' : 'Ajouter un nouveau abonnement' }}</h2>
+      <button type="button" (click)="onCancel()" class="text-gray-400 hover:text-gray-500">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Corps de la popup (formulaire) -->
+    <div class="p-4">
+      <form [formGroup]="subscriptionForm" (ngSubmit)="onSubmit()">
+        <div class="space-y-4">
+          <!-- Nom du service -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Nom du service</label>
+            <input type="text" id="name" formControlName="name" 
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <div *ngIf="submitted && subscriptionForm.controls['name'].errors" class="text-red-500 text-xs mt-1">
+              <div *ngIf="subscriptionForm.controls['name'].errors['required']">Le nom est requis</div>
+            </div>
+          </div>
+          
+          <!-- Prix (renommé en amount) -->
+          <div>
+            <label for="price" class="block text-sm font-medium text-gray-700">Prix (€)</label>
+            <input type="price" id="price" formControlName="price" step="0.01"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <div *ngIf="submitted && subscriptionForm.controls['price'].errors" class="text-red-500 text-xs mt-1">
+              <div *ngIf="subscriptionForm.controls['price'].errors['required']">Le prix est requis</div>
+              <div *ngIf="subscriptionForm.controls['price'].errors['min']">Le prix doit être supérieur à 0</div>
+            </div>
+          </div>
+          
+          <!-- Fréquence de paiement -->
+          <div>
+            <label for="paymentFrequency" class="block text-sm font-medium text-gray-700">Fréquence de paiement</label>
+            <select id="paymentFrequency" formControlName="paymentFrequency"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+              <option [ngValue]="null">Sélectionnez une fréquence</option>
+              <option *ngFor="let frequency of paymentFrequencyService.frequencies()" [ngValue]="frequency.id">
+                {{ frequency.name }}
+              </option>
+            </select>
+            <div *ngIf="submitted && subscriptionForm.controls['paymentFrequency'].errors" class="text-red-500 text-xs mt-1">
+              <div *ngIf="subscriptionForm.controls['paymentFrequency'].errors['required']">La fréquence est requise</div>
+            </div>
+          </div>
+          
+          <!-- Catégorie -->
+          <div>
+            <label for="category" class="block text-sm font-medium text-gray-700">Catégorie</label>
+            <select id="category" formControlName="category"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+              <option [ngValue]="null">Sélectionnez une catégorie</option>
+              <option *ngFor="let cat of categoryService.categories()" [ngValue]="cat.id">
+                {{ cat.name }}
+              </option>
+            </select>
+            <div *ngIf="submitted && subscriptionForm.controls['category'].errors" class="text-red-500 text-xs mt-1">
+              <div *ngIf="subscriptionForm.controls['category'].errors['required']">La catégorie est requise</div>
+            </div>
+          </div>
+          
+          <!-- Date de début -->
+          <div>
+            <label for="startDate" class="block text-sm font-medium text-gray-700">Date de début</label>
+            <input type="date" id="startDate" formControlName="startDate"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <div *ngIf="submitted && subscriptionForm.controls['startDate'].errors" class="text-red-500 text-xs mt-1">
+              <div *ngIf="subscriptionForm.controls['startDate'].errors['required']">La date de début est requise</div>
+            </div>
+          </div>
+          
+          <!-- Date de fin (optionnel) -->
+          <div>
+            <label for="nextPaymentDate" class="block text-sm font-medium text-gray-700">Date de fin (optionnel)</label>
+            <input type="date" id="nextPaymentDate" formControlName="nextPaymentDate"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+          </div>
+          
+          <!-- Statut actif -->
+          <div class="flex items-center">
+            <input type="checkbox" id="active" formControlName="active"
+                   class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+            <label for="active" class="ml-2 block text-sm font-medium text-gray-700">
+              Abonnement actif
+            </label>
+          </div>
+          
+          <!-- Description -->
+          <div>
+            <label for="description" class="block text-sm font-medium text-gray-700">Description (optionnel)</label>
+            <textarea id="description" formControlName="description" rows="3"
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+          </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="mt-6 flex items-center justify-end gap-3">
+          <button type="button" (click)="onCancel()" 
+                  class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors duration-200">
+            Annuler
+          </button>
+          <button type="submit" 
+                  [disabled]="isSubmitting"
+                  class="px-4 py-2 text-sm font-medium text-white bg-gray-800 hover:bg-black rounded-md shadow-sm transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center">
+            <span *ngIf="isSubmitting" class="mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }} l'abonnement
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

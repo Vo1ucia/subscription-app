@@ -2,13 +2,16 @@
     <!-- Nom de l'abonnement et bouton d'édition -->
     <div class="flex justify-between items-center mb-2">
       <h3 class="font-semibold text-gray-900">{{ subscription.name }}</h3>
-      
+      <span class="px-2 py-1 text-xs rounded-full" 
+            [ngClass]="{'bg-green-100 text-green-800': subscription.active, 'bg-red-100 text-red-800': !subscription.active}">
+        {{ subscription.active ? 'Actif' : 'Inactif' }}
+      </span>
     </div>
     
     <!-- Prix mensuel -->
     <div class="text-sm text-gray-600 mb-4">
-      Mensuel: {{ getMonthlyPrice().toFixed(2) }}€
-      <span *ngIf="subscription.frequency !== 'monthly'" class="text-xs text-gray-400">
+       Mensuel: {{ getMonthlyPrice() | currency:'EUR':'symbol':'1.2-2' }}
+      <span *ngIf="!isMonthlyPayment()" class="text-xs text-gray-400">
         ({{ formatOriginalPrice() }})
       </span>
     </div>
@@ -17,15 +20,19 @@
     <div *ngIf="showDetails" class="bg-gray-50 p-3 rounded-md mb-4 text-xs space-y-2 animate-fadeIn">
         <div class="flex justify-between">
           <span class="text-gray-500">Catégorie:</span>
-          <span class="font-medium text-gray-700">{{ formatCategory(subscription.category) }}</span>
+          <span class="font-medium text-gray-700">{{ getCategoryName() }}</span>
         </div>
         <div class="flex justify-between">
           <span class="text-gray-500">Fréquence:</span>
-          <span class="font-medium text-gray-700">{{ formatFrequency(subscription.frequency) }}</span>
+          <span class="font-medium text-gray-700">{{ getFrequencyName() }}</span>
         </div>
         <div class="flex justify-between">
           <span class="text-gray-500">Date de début:</span>
           <span class="font-medium text-gray-700">{{ formatDate(subscription.startDate) }}</span>
+        </div>
+        <div *ngIf="subscription.nextPaymentDate" class="flex justify-between">
+          <span class="text-gray-500">Date de fin:</span>
+          <span class="font-medium text-gray-700">{{ formatDate(subscription.nextPaymentDate) }}</span>
         </div>
         <div *ngIf="subscription.description" class="pt-1">
           <span class="text-gray-500">Description:</span>

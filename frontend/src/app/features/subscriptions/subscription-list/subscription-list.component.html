@@ -1,0 +1,40 @@
+<div class="p-5">
+    <!-- En-tête avec titre et bouton d'ajout côte à côte -->
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold">Abonnement Actif</h2>
+      <button (click)="showForm = true" 
+              class="px-4 py-2 text-sm font-medium text-white bg-gray-800 hover:bg-black rounded-md shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700 flex items-center">
+        Ajouter un abonnement
+      </button>
+    </div>
+
+    <div *ngIf="subService.loading()" class="flex justify-center py-6">
+      <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
+    </div>
+    
+    <!-- Message d'erreur -->
+    <div *ngIf="subService.error()" class="p-4 mb-4 text-sm rounded-md bg-red-50 text-red-600 border border-red-200">
+      {{ subService.error() }}
+    </div>
+    
+    <!-- Liste des abonnements utilisant le composant card -->
+    <div class="flex flex-wrap gap-6">
+      <div *ngIf="!subService.loading() && subService.subscriptions().length > 0" 
+           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <app-subscription-card 
+          *ngFor="let subscription of subService.subscriptions()" 
+          [subscription]="subscription"
+          (edit)="onEdit($event)"
+          (delete)="onDelete($event)">
+        </app-subscription-card>
+      </div>
+    </div>
+  </div>
+
+@if (showForm) {
+  <app-subscription-form
+    [subscription]="currentSubscription"
+    (cancel)="hideForm()"
+    (subscriptionUpdated)="onSubscriptionUpdated()">
+  </app-subscription-form>
+}
