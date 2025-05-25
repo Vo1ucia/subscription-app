@@ -25,7 +25,8 @@
 
 ## 📸 Aperçu
 
--- à faire
+![image](https://github.com/user-attachments/assets/fe987dce-66bf-4ef9-b627-9f81b88228c7)
+
 
 ---
 
