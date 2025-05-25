@@ -25,10 +25,7 @@
 
 ## 📸 Aperçu
 
-> À personnaliser avec des captures d’écran ou GIF de :
-> - L’écran de connexion
-> - Le tableau de bord après login
-> - Une requête API avec token
+-- à faire
 
 ---
 
