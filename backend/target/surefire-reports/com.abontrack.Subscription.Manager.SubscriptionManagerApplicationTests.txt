@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.abontrack.Subscription.Manager.SubscriptionManagerApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.378 s -- in com.abontrack.Subscription.Manager.SubscriptionManagerApplicationTests
