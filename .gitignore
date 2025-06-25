@@ -19,6 +19,3 @@ backend/Subscription-Manager/target/
 .env
 *.env
 
-# === GIT AUTO-GÉNÉRÉS OU NON UTILISÉS ===
-package-lock.json          # (dans SUBSCRIPTION-APP/, pas dans frontend/)
-package.json               # (dans SUBSCRIPTION-APP/, pas dans frontend/)
