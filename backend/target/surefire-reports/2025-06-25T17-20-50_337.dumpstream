@@ -1,5 +1,0 @@
-# Created at 2025-06-25T17:20:50.719
-Boot Manifest-JAR contains absolute paths in classpath 'D:\Sandra Ly\Documents\Projet\subscription-app\backend\Subscription-Manager\target\test-classes'
-Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-'other' has different root
-
