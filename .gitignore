@@ -1,21 +1,24 @@
-# Logs & systèmes
+# === FICHIERS SYSTÈME / OS ===
 .DS_Store
 Thumbs.db
 
-# Build Angular
+# === ANGULAR FRONTEND ===
+frontend/node_modules/
 frontend/dist/
 frontend/.angular/
 
-# Node
-frontend/node_modules/
-
-# Spring Boot
+# === SPRING BOOT BACKEND ===
 backend/Subscription-Manager/target/
 
-# IDE & config perso
+# === FICHIERS ET CONFIG TEMPORAIRES ===
 .vscode/
 *.iml
+*.log
 
-# Environnements et secrets
+# === FICHIERS D'ENVIRONNEMENT SECRETS ===
 .env
 *.env
+
+# === GIT AUTO-GÉNÉRÉS OU NON UTILISÉS ===
+package-lock.json          # (dans SUBSCRIPTION-APP/, pas dans frontend/)
+package.json               # (dans SUBSCRIPTION-APP/, pas dans frontend/)
