@@ -29,18 +29,3 @@
 
 
 ---
-
-## 🔧 Installation
-
-### Prérequis
-
-- Node.js (>= 18)
-- Java 17
-- PostgreSQL (ou H2 intégré pour tests)
-- Maven
-
-### Backend (Spring Boot)
-
-```bash
-cd backend
-./mvnw spring-boot:run
