@@ -16,7 +16,7 @@ public class CorsConfig {
         
 
         config.addAllowedOrigin("http://localhost:4200");
-        config.addAllowedOrigin("https://subscription-app-ten-ivory.vercel.app/"); 
+        config.addAllowedOrigin("https://subscription-app-wine.vercel.app"); 
         
         
         
