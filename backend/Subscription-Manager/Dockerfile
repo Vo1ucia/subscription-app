@@ -1,16 +1,12 @@
-# Étape 1 : Image Java officielle
-FROM eclipse-temurin:19-jdk-alpine
 
-# Création d’un dossier pour l’app
+# Étape de build
+FROM maven:3.9.6-eclipse-temurin-19 AS builder
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copie du .jar
-COPY target/Subscription-Manager-0.0.1-SNAPSHOT.jar app.jar
-
-
-# Port exposé (par défaut dans Spring Boot)
-EXPOSE 8080
-
-# Commande de lancement
-ENTRYPOINT ["java", "-Dspring.h2.console.settings.web-allow-others=true", "-jar", "app.jar"]
-
+# Étape finale
+FROM eclipse-temurin:19-jdk-alpine
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
+ENTRYPOINT ["java","-Dspring.h2.console.settings.web-allow-others=true", "-jar", "/app/app.jar"]
