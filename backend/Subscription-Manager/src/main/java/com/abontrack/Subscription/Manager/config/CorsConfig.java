@@ -9,22 +9,4 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 public class CorsConfig {
 
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        
-
-        config.addAllowedOrigin("http://localhost:4200");
-        config.addAllowedOrigin("https://subscription-app-wine.vercel.app"); 
-        
-        
-        
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        config.setAllowCredentials(true); // Important si vous utilisez des cookies/sessions
-        
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
 }
