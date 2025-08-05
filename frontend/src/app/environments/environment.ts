@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://subscription-app-production.up.railway.app/' 
+  apiUrl: 'https://subscription-app-0f5f.onrender.com/' 
 };
