@@ -40,11 +40,13 @@ public class SecurityConfig {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
+            .headers(headers -> headers.frameOptions().sameOrigin())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/categories/**").authenticated()
                 .requestMatchers("/api/payment-frequencies/**").authenticated()
                 .requestMatchers("/api/subscriptions/**").authenticated()
+                .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/users/**").authenticated()
                 .anyRequest().authenticated()
             )
