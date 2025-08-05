@@ -1,0 +1,280 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "johndoe",
+      "email": "demo@example.com",
+      "password_hash": "$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy",
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "username": "admin",
+      "email": "admin@example.com",
+      "password_hash": "$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy",
+      "created_at": "2024-01-10T10:00:00Z",
+      "updated_at": "2024-01-10T10:00:00Z"
+    },
+    {
+      "id": 3,
+      "username": "mariedurand",
+      "email": "marie@example.com",
+      "password_hash": "$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy",
+      "created_at": "2024-02-01T14:30:00Z",
+      "updated_at": "2024-02-01T14:30:00Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Streaming",
+      "description": "Services de streaming vidéo et audio",
+      "created_at": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Productivité",
+      "description": "Outils de travail et de productivité",
+      "created_at": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": 3,
+      "name": "Design",
+      "description": "Logiciels de création et design",
+      "created_at": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": 4,
+      "name": "Développement",
+      "description": "Outils et services pour développeurs",
+      "created_at": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": 5,
+      "name": "Cloud Storage",
+      "description": "Services de stockage en ligne",
+      "created_at": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": 6,
+      "name": "Fitness",
+      "description": "Applications de sport et bien-être",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "payment_frequencies": [
+    {
+      "id": 1,
+      "name": "Mensuel",
+      "months_interval": 1,
+      "description": "Paiement chaque mois"
+    },
+    {
+      "id": 2,
+      "name": "Trimestriel",
+      "months_interval": 3,
+      "description": "Paiement tous les 3 mois"
+    },
+    {
+      "id": 3,
+      "name": "Semestriel",
+      "months_interval": 6,
+      "description": "Paiement tous les 6 mois"
+    },
+    {
+      "id": 4,
+      "name": "Annuel",
+      "months_interval": 12,
+      "description": "Paiement chaque année"
+    },
+    {
+      "id": 5,
+      "name": "Biennal",
+      "months_interval": 24,
+      "description": "Paiement tous les 2 ans"
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "name": "Netflix Premium",
+      "description": "Streaming vidéo illimité en 4K, jusqu'à 4 écrans simultanés",
+      "price": 17.99,
+      "category_id": 1,
+      "payment_frequency_id": 1,
+      "start_date": "2024-01-01",
+      "next_payment_date": "2024-09-01",
+      "auto_renew": true,
+      "active": true,
+      "created_at": "2024-01-01T09:00:00Z",
+      "updated_at": "2024-01-01T09:00:00Z"
+    },
+    {
+      "id": 2,
+      "user_id": 1,
+      "name": "Spotify Premium",
+      "description": "Musique illimitée sans publicité, téléchargement hors ligne",
+      "price": 9.99,
+      "category_id": 1,
+      "payment_frequency_id": 1,
+      "start_date": "2024-02-15",
+      "next_payment_date": "2024-09-15",
+      "auto_renew": true,
+      "active": true,
+      "created_at": "2024-02-15T14:30:00Z",
+      "updated_at": "2024-02-15T14:30:00Z"
+    },
+    {
+      "id": 3,
+      "user_id": 1,
+      "name": "Adobe Creative Cloud",
+      "description": "Suite complète d'outils créatifs : Photoshop, Illustrator, InDesign, etc.",
+      "price": 59.99,
+      "category_id": 3,
+      "payment_frequency_id": 1,
+      "start_date": "2024-03-01",
+      "next_payment_date": "2024-09-01",
+      "auto_renew": true,
+      "active": true,
+      "created_at": "2024-03-01T10:15:00Z",
+      "updated_at": "2024-03-01T10:15:00Z"
+    },
+    {
+      "id": 4,
+      "user_id": 1,
+      "name": "Microsoft 365 Business",
+      "description": "Suite bureautique complète avec Word, Excel, PowerPoint, Teams",
+      "price": 84.00,
+      "category_id": 2,
+      "payment_frequency_id": 4,
+      "start_date": "2024-01-01",
+      "next_payment_date": "2025-01-01",
+      "auto_renew": true,
+      "active": true,
+      "created_at": "2024-01-01T08:00:00Z",
+      "updated_at": "2024-01-01T08:00:00Z"
+    },
+    {
+      "id": 5,
+      "user_id": 1,
+      "name": "Notion Pro",
+      "description": "Espace de travail tout-en-un pour la prise de notes et gestion de projets",
+      "price": 8.00,
+      "category_id": 2,
+      "payment_frequency_id": 1,
+      "start_date": "2024-04-01",
+      "next_payment_date": "2024-09-01",
+      "auto_renew": false,
+      "active": true,
+      "created_at": "2024-04-01T16:20:00Z",
+      "updated_at": "2024-04-01T16:20:00Z"
+    },
+    {
+      "id": 6,
+      "user_id": 1,
+      "name": "GitHub Pro",
+      "description": "Dépôts privés illimités et outils avancés pour développeurs",
+      "price": 4.00,
+      "category_id": 4,
+      "payment_frequency_id": 1,
+      "start_date": "2024-05-01",
+      "next_payment_date": "2024-09-01",
+      "auto_renew": true,
+      "active": true,
+      "created_at": "2024-05-01T12:00:00Z",
+      "updated_at": "2024-05-01T12:00:00Z"
+    },
+    {
+      "id": 7,
+      "user_id": 1,
+      "name": "Dropbox Plus",
+      "description": "2TB de stockage cloud avec synchronisation avancée",
+      "price": 120.00,
+      "category_id": 5,
+      "payment_frequency_id": 4,
+      "start_date": "2024-02-01",
+      "next_payment_date": "2025-02-01",
+      "auto_renew": true,
+      "active": true,
+      "created_at": "2024-02-01T11:30:00Z",
+      "updated_at": "2024-02-01T11:30:00Z"
+    },
+    {
+      "id": 8,
+      "user_id": 1,
+      "name": "Amazon Prime",
+      "description": "Livraison gratuite et accès à Prime Video",
+      "price": 49.00,
+      "category_id": 1,
+      "payment_frequency_id": 4,
+      "start_date": "2023-12-01",
+      "next_payment_date": "2024-12-01",
+      "auto_renew": false,
+      "active": false,
+      "created_at": "2023-12-01T15:45:00Z",
+      "updated_at": "2024-07-15T10:00:00Z"
+    },
+    {
+      "id": 9,
+      "user_id": 2,
+      "name": "Figma Professional",
+      "description": "Outil de design collaboratif pour équipes",
+      "price": 12.00,
+      "category_id": 3,
+      "payment_frequency_id": 1,
+      "start_date": "2024-03-15",
+      "next_payment_date": "2024-09-15",
+      "auto_renew": true,
+      "active": true,
+      "created_at": "2024-03-15T09:30:00Z",
+      "updated_at": "2024-03-15T09:30:00Z"
+    },
+    {
+      "id": 10,
+      "user_id": 2,
+      "name": "Slack Pro",
+      "description": "Communication d'équipe avec fonctionnalités avancées",
+      "price": 6.25,
+      "category_id": 2,
+      "payment_frequency_id": 1,
+      "start_date": "2024-01-20",
+      "next_payment_date": "2024-09-20",
+      "auto_renew": true,
+      "active": true,
+      "created_at": "2024-01-20T13:15:00Z",
+      "updated_at": "2024-01-20T13:15:00Z"
+    },
+    {
+      "id": 11,
+      "user_id": 3,
+      "name": "MyFitnessPal Premium",
+      "description": "Suivi nutritionnel et d'exercices avec analyses détaillées",
+      "price": 49.99,
+      "category_id": 6,
+      "payment_frequency_id": 4,
+      "start_date": "2024-02-10",
+      "next_payment_date": "2025-02-10",
+      "auto_renew": true,
+      "active": true,
+      "created_at": "2024-02-10T07:20:00Z",
+      "updated_at": "2024-02-10T07:20:00Z"
+    },
+    {
+      "id": 12,
+      "user_id": 3,
+      "name": "Disney+",
+      "description": "Streaming de films et séries Disney, Marvel, Star Wars",
+      "price": 8.99,
+      "category_id": 1,
+      "payment_frequency_id": 1,
+      "start_date": "2024-04-05",
+      "next_payment_date": "2024-09-05",
+      "auto_renew": true,
+      "active": true,
+      "created_at": "2024-04-05T19:45:00Z",
+      "updated_at": "2024-04-05T19:45:00Z"
+    }
+  ]
+}
