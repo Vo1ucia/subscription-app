@@ -21,7 +21,7 @@ public class SubscriptionRequest {
     private Long userId;
     
     @NotNull(message = "Category ID is required")
-    private Long categoryId; // Peut être null
+    private Long categoryId;
     
     @NotNull(message = "Payment frequency ID is required")
     private Long paymentFrequencyId;

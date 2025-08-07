@@ -1,5 +1,6 @@
 package com.abontrack.Subscription.Manager.controller;
 
+import com.abontrack.Subscription.Manager.model.PaymentFrequency;
 import com.abontrack.Subscription.Manager.model.Subscription;
 import com.abontrack.Subscription.Manager.service.SubscriptionService;
 
@@ -127,6 +128,7 @@ public class SubscriptionController {
             dto.setCategoryId(subscription.getCategory().getId());
             dto.setCategoryName(subscription.getCategory().getName());
         }
+        
         
         dto.setPaymentFrequencyId(subscription.getPaymentFrequency().getId());
         dto.setPaymentFrequencyName(subscription.getPaymentFrequency().getName());
