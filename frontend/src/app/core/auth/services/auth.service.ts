@@ -30,7 +30,7 @@ export class AuthService {
   
   // Signaux
   private userSignal = signal<User | null>(this.getUserFromStorage());
-  private tokenSignal = signal<string | null>(localStorage.getItem('token'));
+  private tokenSignal = signal<string | null>(sessionStorage.getItem('token'));
   
   private loadingSignal = signal<boolean>(false);
   private errorSignal = signal<string | null>(null);
@@ -49,23 +49,21 @@ export class AuthService {
   private router = inject(Router);
   
   constructor() {
-    // Effet pour gérer la persistance du token et de l'utilisateur
     effect(() => {
       const token = this.tokenSignal();
       const user = this.userSignal();
-      
+    
       if (token) {
-        localStorage.setItem('token', token);
+        sessionStorage.setItem('token', token);
       } else {
-        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
       }
-      
+    
       if (user) {
-        localStorage.setItem('currentUser', JSON.stringify(user));
+        sessionStorage.setItem('currentUser', JSON.stringify(user));
       } else {
-        localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentUser');
       }
-
     });
   }
   
@@ -149,7 +147,7 @@ export class AuthService {
       newPassword
     }).pipe(
       tap(() => {
-        console.log('Mot de passe modifié avec succès');
+        
       }),
       catchError(error => {
         console.error('Erreur lors de la modification du mot de passe', error);
@@ -159,7 +157,7 @@ export class AuthService {
   }
   
   private getUserFromStorage(): User | null {
-    const userStr = localStorage.getItem('currentUser');
+    const userStr = sessionStorage.getItem('currentUser');
     if (userStr) {
       try {
         return JSON.parse(userStr);

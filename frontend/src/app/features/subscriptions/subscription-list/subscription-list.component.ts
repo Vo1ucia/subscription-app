@@ -41,6 +41,7 @@ export class SubscriptionListComponent {
   
   onSubscriptionUpdated(): void {
     this.hideForm();
+    this.subService.loadSubscriptionsForCurrentUser();
   }
   
   onDelete(id: number) {

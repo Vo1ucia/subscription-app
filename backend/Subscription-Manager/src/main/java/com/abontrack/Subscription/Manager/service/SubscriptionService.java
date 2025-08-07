@@ -57,11 +57,9 @@ public class SubscriptionService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
         
-        Category category = null;
-        if (categoryId != null) {
-            category = categoryRepository.findById(categoryId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
-        }
+
+        Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
         
         PaymentFrequency frequency = paymentFrequencyRepository.findById(frequencyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Payment frequency not found with id: " + frequencyId));
