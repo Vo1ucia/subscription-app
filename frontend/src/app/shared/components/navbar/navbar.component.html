@@ -1,24 +1,46 @@
-<!-- Template HTML (navbar.component.html) -->
 <nav class="bg-white shadow-sm py-4 px-6">
   <div class="max-w-5xl mx-auto flex justify-between items-center">
-    <div class="flex items-center">
-      <a routerLink="/main" class="text-lg font-bold text-gray-800">
-        <i class="fa fa-credit-card mr-2"></i> SubsManage
-      </a>
+    <!-- Logo -->
+    <a routerLink="/main" class="text-lg font-bold text-gray-800 flex items-center">
+      <i class="fa fa-credit-card mr-2"></i> SubsManage
+    </a>
+
+    <!-- Burger (mobile only) -->
+    <button (click)="toggleMenu()" class="sm:hidden text-gray-700 focus:outline-none">
+      <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path *ngIf="!isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16" />
+        <path *ngIf="isMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Menu (desktop only) -->
+    <div class="hidden sm:flex space-x-4 items-center">
+      <ng-container *ngIf="!authService.isAuthenticated(); else connectedLinks">
+        <a routerLink="/login" class="text-gray-600 hover:text-gray-900">Se connecter</a>
+        <a routerLink="/register" class="px-3 py-1 bg-gray-800 text-white rounded-md hover:bg-black transition-colors">S'inscrire</a>
+      </ng-container>
+      <ng-template #connectedLinks>
+        <a routerLink="/profile" class="text-gray-600 hover:text-gray-900">Profil</a>
+        <a routerLink="/dashboard" class="text-gray-600 hover:text-gray-900">Dashboard</a>
+        <a routerLink="/subscriptions" class="text-gray-600 hover:text-gray-900">Abonnements</a>
+        <button (click)="logout()" class="text-gray-600 hover:text-gray-900">Déconnexion</button>
+      </ng-template>
     </div>
-     
-    <!-- Menu pour utilisateurs non connectés -->
-    <div *ngIf="!authService.isAuthenticated()" class="flex space-x-4">
-      <a routerLink="/login" class="text-gray-600 hover:text-gray-900">Se connecter</a>
-      <a routerLink="/register" class="px-3 py-1 bg-gray-800 text-white rounded-md hover:bg-black transition-colors">S'inscrire</a>
-    </div>
-    
-    <!-- Menu pour utilisateurs connectés -->
-    <div *ngIf="authService.isAuthenticated()" class="flex items-center space-x-4">
-      <a routerLink="/profile" class="text-gray-600 hover:text-gray-900">Profil</a>
-      <a routerLink="/dashboard" class="text-gray-600 hover:text-gray-900">Dashboard</a>
-      <a routerLink="/subscriptions" class="text-gray-600 hover:text-gray-900">Abonnements</a>
+  </div>
+
+  <!-- Menu déroulant (mobile only) -->
+  <div *ngIf="isMenuOpen" class="sm:hidden mt-4 flex flex-col space-y-2">
+    <ng-container *ngIf="!authService.isAuthenticated(); else mobileConnectedLinks">
+      <a routerLink="/login" (click)="toggleMenu()" class="text-gray-600 hover:text-gray-900">Se connecter</a>
+      <a routerLink="/register" (click)="toggleMenu()" class="px-3 py-1 bg-gray-800 text-white rounded-md hover:bg-black transition-colors">S'inscrire</a>
+    </ng-container>
+    <ng-template #mobileConnectedLinks>
+      <a routerLink="/profile" (click)="toggleMenu()" class="text-gray-600 hover:text-gray-900">Profil</a>
+      <a routerLink="/dashboard" (click)="toggleMenu()" class="text-gray-600 hover:text-gray-900">Dashboard</a>
+      <a routerLink="/subscriptions" (click)="toggleMenu()" class="text-gray-600 hover:text-gray-900">Abonnements</a>
       <button (click)="logout()" class="text-gray-600 hover:text-gray-900">Déconnexion</button>
-    </div>
+    </ng-template>
   </div>
 </nav>
