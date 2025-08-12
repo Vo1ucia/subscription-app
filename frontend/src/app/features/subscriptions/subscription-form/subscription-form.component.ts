@@ -1,20 +1,32 @@
-import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subscription } from '../../../core/models/subscription';
-import { SubscriptionService } from '../../../core/services/subscription.service';
-import { CategoryService } from '../../../core/services/category.service';
-import { PaymentFrequencyService } from '../../../core/services/paymentfrequency.service';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  inject,
+} from "@angular/core";
+import { CommonModule } from "@angular/common";
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import { Subscription } from "../../../core/models/subscription";
+import { SubscriptionService } from "../../../core/services/subscription.service";
+import { CategoryService } from "../../../core/services/category.service";
+import { PaymentFrequencyService } from "../../../core/services/paymentfrequency.service";
+import { addMonths, format, parseISO } from "date-fns";
 
 @Component({
-  selector: 'app-subscription-form',
+  selector: "app-subscription-form",
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './subscription-form.component.html',
-  styleUrl: './subscription-form.component.scss'
+  templateUrl: "./subscription-form.component.html",
+  styleUrl: "./subscription-form.component.scss",
 })
-export class SubscriptionFormComponent implements OnInit{
-  
+export class SubscriptionFormComponent implements OnInit {
   @Input() subscription: Subscription | null = null;
   @Output() cancel = new EventEmitter<void>();
   @Output() subscriptionAdded = new EventEmitter<void>();
@@ -26,14 +38,14 @@ export class SubscriptionFormComponent implements OnInit{
   public paymentFrequencyService = inject(PaymentFrequencyService);
 
   subscriptionForm = this.fb.group({
-    name: ['', Validators.required],
+    name: ["", Validators.required],
     price: [0, [Validators.required, Validators.min(0.01)]],
     paymentFrequency: [null as number | null, Validators.required],
     category: [null as number | null, Validators.required],
-    startDate: ['', Validators.required],
+    startDate: ["", Validators.required],
     nextPaymentDate: [null as string | null],
     active: [true],
-    description: ['']
+    description: [""],
   });
 
   submitted = false;
@@ -45,89 +57,101 @@ export class SubscriptionFormComponent implements OnInit{
     if (this.categoryService.categories().length === 0) {
       this.categoryService.loadAll();
     }
-    
+
     if (this.paymentFrequencyService.frequencies().length === 0) {
       this.paymentFrequencyService.loadAll();
     }
-    
+
     // Déterminer si on est en mode édition
     this.isEditMode = !!this.subscription;
-    
+
     // Initialiser le formulaire avec les valeurs de l'abonnement si en mode édition
     if (this.subscription) {
       this.patchFormValues();
     }
+
+    this.setupAutoDates();
   }
-  
+
   private patchFormValues(): void {
     if (!this.subscription) return;
-    
+
     this.subscriptionForm.patchValue({
       name: this.subscription.name,
       price: this.subscription.price,
       paymentFrequency: this.getPaymentFrequencyId(),
       category: this.getCategoryId(),
       startDate: this.formatDateForInput(this.subscription.startDate),
-      nextPaymentDate: this.formatDateForInput(this.subscription.nextPaymentDate),
+      nextPaymentDate: this.formatDateForInput(
+        this.subscription.nextPaymentDate
+      ),
       active: this.subscription.active ?? true,
-      description: this.subscription.description || ''
+      description: this.subscription.description || "",
     });
   }
-  
+
   private getPaymentFrequencyId(): number | null {
     if (!this.subscription?.paymentFrequency) return null;
-    
-    if (typeof this.subscription.paymentFrequency === 'number') {
+
+    if (typeof this.subscription.paymentFrequency === "number") {
       return this.subscription.paymentFrequency;
-    } else if (this.subscription.paymentFrequency && 'id' in this.subscription.paymentFrequency) {
+    } else if (
+      this.subscription.paymentFrequency &&
+      "id" in this.subscription.paymentFrequency
+    ) {
       return this.subscription.paymentFrequency.id || null;
     }
-    
+
     return null;
   }
-  
+
   private getCategoryId(): number | null {
     if (!this.subscription?.category) return null;
-    
-    if (typeof this.subscription.category === 'number') {
+
+    if (typeof this.subscription.category === "number") {
       return this.subscription.category;
-    } else if (this.subscription.category && 'id' in this.subscription.category) {
+    } else if (
+      this.subscription.category &&
+      "id" in this.subscription.category
+    ) {
       return this.subscription.category.id || null;
     }
-    
+
     return null;
   }
-  
+
   private formatDateForInput(date: Date | string | undefined): string {
-    if (!date) return '';
-    
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return dateObj.toISOString().split('T')[0];
+    if (!date) return "";
+
+    const dateObj = typeof date === "string" ? new Date(date) : date;
+    return dateObj.toISOString().split("T")[0];
   }
-  
+
   onSubmit(): void {
     this.submitted = true;
-    
+
     if (this.subscriptionForm.invalid) {
       return;
     }
-    
+
     this.isSubmitting = true;
-    
+
     const formData = this.prepareFormData();
-    
+
     if (this.isEditMode && this.subscription?.id) {
       // Mise à jour d'un abonnement existant
-      this.subscriptionService.update(this.subscription.id, formData).subscribe({
-        next: () => {
-          this.isSubmitting = false;
-          this.subscriptionUpdated.emit();
-        },
-        error: (error) => {
-          console.error('Erreur lors de la mise à jour:', error);
-          this.isSubmitting = false;
-        }
-      });
+      this.subscriptionService
+        .update(this.subscription.id, formData)
+        .subscribe({
+          next: () => {
+            this.isSubmitting = false;
+            this.subscriptionUpdated.emit();
+          },
+          error: (error) => {
+            console.error("Erreur lors de la mise à jour:", error);
+            this.isSubmitting = false;
+          },
+        });
     } else {
       // Création d'un nouvel abonnement
       this.subscriptionService.create(formData).subscribe({
@@ -136,33 +160,80 @@ export class SubscriptionFormComponent implements OnInit{
           this.subscriptionUpdated.emit();
         },
         error: (error) => {
-          console.error('Erreur lors de la création:', error);
+          console.error("Erreur lors de la création:", error);
           this.isSubmitting = false;
-        }
+        },
       });
     }
   }
-  
+
   private prepareFormData(): Subscription {
     const formValue = this.subscriptionForm.value;
-    
+
     // Convertir les dates de chaînes en objets Date
-    const startDate = formValue.startDate ? new Date(formValue.startDate) : new Date();
-    const endDate = formValue.nextPaymentDate ? new Date(formValue.nextPaymentDate) : undefined;
-    
+    const startDate = formValue.startDate
+      ? new Date(formValue.startDate)
+      : new Date();
+    const endDate = formValue.nextPaymentDate
+      ? new Date(formValue.nextPaymentDate)
+      : undefined;
+
     return {
-      ...(this.subscription || {}),  // Préserver l'ID et d'autres champs si en mode édition
-      name: formValue.name || '',
-      price: parseFloat(formValue.price?.toString() || '0'),
+      ...(this.subscription || {}), // Préserver l'ID et d'autres champs si en mode édition
+      name: formValue.name || "",
+      price: parseFloat(formValue.price?.toString() || "0"),
       paymentFrequency: formValue.paymentFrequency || null,
       category: formValue.category || null,
       startDate: startDate,
       nextPaymentDate: endDate,
       active: formValue.active ?? true,
-      description: formValue.description || ''
+      description: formValue.description || "",
     } as Subscription;
   }
-  
+
+  private setupAutoDates(): void {
+    const today = format(new Date(), "yyyy-MM-dd");
+
+    if (!this.isEditMode) {
+      this.subscriptionForm.patchValue({ startDate: today });
+    }
+
+    this.subscriptionForm
+      .get("paymentFrequency")
+      ?.valueChanges.subscribe((freqId) => {
+        if (freqId == null) return;
+
+        this.paymentFrequencyService.getById(freqId).subscribe((frequency) => {
+          if (!frequency) return;
+
+          const startDateStr = this.subscriptionForm.get("startDate")?.value;
+
+          // Sécurité : vérifier que la date existe et est valide
+          if (!startDateStr || isNaN(Date.parse(startDateStr))) {
+            console.warn("startDate invalide :", startDateStr);
+            return;
+          }
+
+          try {
+            const startDate = parseISO(startDateStr); // 🧠 ici il faut une string bien formatée
+            const nextPaymentDate = addMonths(startDate, frequency.months);
+
+            // Vérifier que nextPaymentDate est une vraie date
+            if (isNaN(nextPaymentDate.getTime())) {
+              console.warn("nextPaymentDate invalide :", nextPaymentDate);
+              return;
+            }
+
+            this.subscriptionForm.patchValue({
+              nextPaymentDate: format(nextPaymentDate, "yyyy-MM-dd"),
+            });
+          } catch (err) {
+            console.error("Erreur lors du calcul de la date de fin :", err);
+          }
+        });
+      });
+  }
+
   onCancel(): void {
     this.cancel.emit();
   }
