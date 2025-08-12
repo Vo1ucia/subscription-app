@@ -12,3 +12,10 @@
 .animate-fadeIn {
   animation: fadeIn 0.2s ease-out;
 }
+
+/* Optional: Smooth scrolling for the form content */
+@media (max-height: 600px) {
+  .max-h-\[90vh\] {
+    max-height: 80vh;
+  }
+}

@@ -11,6 +11,7 @@ import { AuthService } from '../../../core/auth/services/auth.service';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
+
 export class NavbarComponent {
   public authService = inject(AuthService);
   isMenuOpen = false;

@@ -182,7 +182,6 @@ public class UserController {
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
-        // Ne pas inclure le mot de passe dans le DTO
         return dto;
     }
 
