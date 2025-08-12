@@ -28,7 +28,7 @@
 
 ## 📸 Aperçu de l'application
 
-![image](https://github.com/user-attachments/assets/fe987dce-66bf-4ef9-b627-9f81b88228c7)
+<img width="1291" height="800" alt="image" src="https://github.com/user-attachments/assets/20f1d1bc-eea4-4a6a-ad1e-cb12d4ef55c2" />
 
 ---
 
